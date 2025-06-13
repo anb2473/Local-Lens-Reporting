@@ -116,40 +116,41 @@ def analyze_claims_plausibility(claims: List[str]) -> List[Dict]:
     return results
 
 # --- Examples of Usage ---
-if __name__ == "__main__":
-    if plausibility_analyzer: # Only run examples if the model loaded successfully
-        # Example list of claims to analyze
-        claims_to_analyze = [
-            "I saw aliens riding unicorns in Area 51 yesterday.",
-            "The Earth revolves around the Sun.",
-            "The mayor of the town has been secretly dumping sewage in Bob's house.",
-            "Water boils at 100 degrees Celsius at standard atmospheric pressure.",
-            "The global economy is expected to experience moderate growth next year.",
-            "   ", # Empty text
-            """
-            Recent archaeological discoveries in the remote Amazon basin suggest that an ancient civilization,
-            previously unknown to modern historians, built a complex network of underground cities.
-            These cities, reportedly powered by a geothermal energy source and protected by advanced
-            camouflage technology, remained hidden for millennia. Local indigenous legends
-            have long spoken of such a place, but conclusive evidence was never found until now.
-            Further expeditions are planned to verify these initial findings and explore the full extent
-            of this incredible discovery, which could rewrite our understanding of pre-Columbian America.
-            """
-        ]
-
-        all_analyses = analyze_claims_plausibility(claims_to_analyze)
-        print("\n--- All Claims Analysis Results ---")
-        for i, analysis in enumerate(all_analyses):
-            print(f"Claim {i+1}: {analysis}")
-
-    else:
-        print("\nModel could not be loaded. Please check your internet connection and library installations.")
-        print("You might need to manually download the model or check proxy settings if you are behind one.")
-
-    print("\n--- Interpretation of Plausibility Scores ---")
-    print("For each claim, you now receive two scores: 'plausible_score' and 'implausible_score'.")
-    print("- 'plausible_score': Represents how likely the model considers the claim to be sensible or expected (i.e., 'true').")
-    print("- 'implausible_score': Represents how unlikely the model considers the claim to be sensible or expected (i.e., 'false').")
-    print("These two scores will sum close to 1, as the model is choosing between these two labels.")
-    print("The 'predicted_label' indicates which of the two the model was most confident about.")
-    print("Remember, this is a *model's inference of plausibility*, not a definitive fact-check.")
+# **NOTE:** This is for test coverage, do not add to codebase
+# if __name__ == "__main__":
+#     if plausibility_analyzer: # Only run examples if the model loaded successfully
+#         # Example list of claims to analyze
+#         claims_to_analyze = [
+#             "I saw aliens riding unicorns in Area 51 yesterday.",
+#             "The Earth revolves around the Sun.",
+#             "The mayor of the town has been secretly dumping sewage in Bob's house.",
+#             "Water boils at 100 degrees Celsius at standard atmospheric pressure.",
+#             "The global economy is expected to experience moderate growth next year.",
+#             "   ", # Empty text
+#             """
+#             Recent archaeological discoveries in the remote Amazon basin suggest that an ancient civilization,
+#             previously unknown to modern historians, built a complex network of underground cities.
+#             These cities, reportedly powered by a geothermal energy source and protected by advanced
+#             camouflage technology, remained hidden for millennia. Local indigenous legends
+#             have long spoken of such a place, but conclusive evidence was never found until now.
+#             Further expeditions are planned to verify these initial findings and explore the full extent
+#             of this incredible discovery, which could rewrite our understanding of pre-Columbian America.
+#             """
+#         ]
+#
+#         all_analyses = analyze_claims_plausibility(claims_to_analyze)
+#         print("\n--- All Claims Analysis Results ---")
+#         for i, analysis in enumerate(all_analyses):
+#             print(f"Claim {i+1}: {analysis}")
+#
+#     else:
+#         print("\nModel could not be loaded. Please check your internet connection and library installations.")
+#         print("You might need to manually download the model or check proxy settings if you are behind one.")
+#
+#     print("\n--- Interpretation of Plausibility Scores ---")
+#     print("For each claim, you now receive two scores: 'plausible_score' and 'implausible_score'.")
+#     print("- 'plausible_score': Represents how likely the model considers the claim to be sensible or expected (i.e., 'true').")
+#     print("- 'implausible_score': Represents how unlikely the model considers the claim to be sensible or expected (i.e., 'false').")
+#     print("These two scores will sum close to 1, as the model is choosing between these two labels.")
+#     print("The 'predicted_label' indicates which of the two the model was most confident about.")
+#     print("Remember, this is a *model's inference of plausibility*, not a definitive fact-check.")
