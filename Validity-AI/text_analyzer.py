@@ -3,16 +3,12 @@
 
 # --- Installation Instructions ---
 # Make sure you have Python installed. Then, install the necessary libraries using pip:
-# pip install torch transformers hf_xet
-# **NOTE:** hf_xet is not required, but will increase efficiency
-# **NOTE:** This system MUST be run as an administrator to properly work
-# **NOTE:** You must have a stable internet connection in order to download the model
-#           ( In the event in which the model throws a failed to download error, simply
-#            retry and ensure you are connected to the internet )
+# pip install torch transformers
 
 # --- Import Libraries ---
 from transformers import pipeline
 import torch
+from typing import List, Dict
 
 # --- Global Plausibility Analyzer ---
 # We initialize the pipeline once to avoid reloading the model for every analysis.
@@ -30,108 +26,130 @@ except Exception as e:
     plausibility_analyzer = None # Set to None if loading fails
 
 # --- Function to Analyze Claim Plausibility ---
-def analyze_claim_plausibility(claim_text: str) -> dict:
+def analyze_claims_plausibility(claims: List[str]) -> List[Dict]:
     """
-    Analyzes the plausibility of a given text claim and assigns a score from 0 to 1.
+    Analyzes the plausibility of a list of text claims and assigns a score from 0 to 1 for each.
     A higher score indicates higher plausibility.
 
     Args:
-        claim_text (str): The input text claim to be analyzed.
+        claims (List[str]): A list of input text claims to be analyzed.
 
     Returns:
-        dict: A dictionary containing the plausibility score and the primary label.
-              Example: {'plausibility_score': 0.95, 'predicted_label': 'plausible claim'}
+        List[Dict]: A list of dictionaries, each containing the plausibility score for 'plausible claim',
+                    the score for 'implausible claim', and the primary predicted label.
+              Example: [
+                  {'claim': 'I saw aliens in Area 51',
+                   'plausible_score': 0.05,
+                   'implausible_score': 0.95,
+                   'predicted_label': 'implausible claim'},
+                  {'claim': 'Water boils at 100 degrees Celsius',
+                   'plausible_score': 0.98,
+                   'implausible_score': 0.02,
+                   'predicted_label': 'plausible claim'}
+              ]
               Returns an error message if the model failed to load or input is invalid.
     """
     if plausibility_analyzer is None:
-        return {'error': 'Plausibility analysis model failed to load. Cannot perform analysis.'}
+        return [{'error': 'Plausibility analysis model failed to load. Cannot perform analysis.'}]
 
-    if not claim_text.strip():
-        return {'plausibility_score': 0.0, 'predicted_label': 'empty claim', 'message': 'Input claim is empty or just whitespace.'}
+    if not claims:
+        return [] # Return empty list if no claims are provided
 
-    print(f"\nAnalyzing claim: '{claim_text}'")
-
+    results = []
     # Define the labels for classification.
-    # The model will evaluate how well the claim aligns with these concepts.
-    candidate_labels = ["plausible claim", "implausible claim"]
+    # Simplified labels to be more direct, enhancing model understanding for plausibility.
+    candidate_labels = ["true", "false"]
 
-    try:
-        # Perform zero-shot classification.
-        # multi_label=False ensures that the scores sum to 1 and we get a single best label.
-        result = plausibility_analyzer(claim_text, candidate_labels, multi_label=False)
+    for claim_text in claims:
+        if not claim_text.strip():
+            results.append({
+                'claim': claim_text,
+                'plausible_score': 0.0,
+                'implausible_score': 0.0,
+                'predicted_label': 'empty claim',
+                'message': 'Input claim is empty or just whitespace.'
+            })
+            continue
 
-        # The result typically contains 'labels' and 'scores' lists,
-        # ordered by confidence. The first item is the most confident prediction.
-        predicted_label = result['labels'][0]
-        predicted_score = result['scores'][0]
+        print(f"\nAnalyzing claim: '{claim_text}'")
 
-        # We want the score for "plausible claim" as our validity score.
-        # If the top predicted label is 'implausible claim', we need to return its
-        # complement for the 'plausibility_score'.
-        plausibility_score = predicted_score if predicted_label == "plausible claim" else (1 - predicted_score)
+        try:
+            # Perform zero-shot classification for each claim.
+            # multi_label=False ensures that the scores sum to 1 and we get a single best label.
+            # The hypothesis_template guides the model to evaluate the truthfulness of the statement.
+            result = plausibility_analyzer(claim_text, candidate_labels, multi_label=False,
+                                           hypothesis_template="This statement is {}.")
 
-        print(f"Predicted Label: '{predicted_label}' (Confidence: {predicted_score:.4f})")
-        print(f"Calculated Plausibility Score (0-1): {plausibility_score:.4f}")
+            # The result contains 'labels' and 'scores' lists, ordered by confidence.
+            # We need to find the specific scores for 'true' and 'false'.
+            plausible_score = 0.0
+            implausible_score = 0.0
 
-        return {'plausibility_score': plausibility_score, 'predicted_label': predicted_label}
+            # Iterate through the returned labels and scores to assign them correctly
+            for i in range(len(result['labels'])):
+                if result['labels'][i] == "true":
+                    plausible_score = result['scores'][i]
+                elif result['labels'][i] == "false":
+                    implausible_score = result['scores'][i]
 
-    except Exception as e:
-        print(f"An error occurred during analysis: {e}")
-        return {'error': f"An error occurred during analysis: {str(e)}"}
+            # The overall predicted label is still the one with the highest confidence
+            # We map 'true' to 'plausible claim' and 'false' to 'implausible claim'
+            predicted_label_raw = result['labels'][0]
+            predicted_label = 'plausible claim' if predicted_label_raw == "true" else 'implausible claim'
+
+
+            print(f"Plausible Score: {plausible_score:.4f}")
+            print(f"Implausible Score: {implausible_score:.4f}")
+            print(f"Primary Predicted Label: '{predicted_label}'")
+
+            results.append({
+                'claim': claim_text,
+                'plausible_score': plausible_score,
+                'implausible_score': implausible_score,
+                'predicted_label': predicted_label
+            })
+
+        except Exception as e:
+            print(f"An error occurred during analysis for claim '{claim_text}': {e}")
+            results.append({'claim': claim_text, 'error': f"An error occurred: {str(e)}"})
+
+    return results
 
 # --- Examples of Usage ---
 if __name__ == "__main__":
     if plausibility_analyzer: # Only run examples if the model loaded successfully
-        # Example 1: Obviously implausible claim
-        claim1 = "I saw aliens riding unicorns in Area 51 yesterday."
-        analysis1 = analyze_claim_plausibility(claim1)
-        print(f"Analysis for claim 1: {analysis1}")
+        # Example list of claims to analyze
+        claims_to_analyze = [
+            "I saw aliens riding unicorns in Area 51 yesterday.",
+            "The Earth revolves around the Sun.",
+            "The mayor of the town has been secretly dumping sewage in Bob's house.",
+            "Water boils at 100 degrees Celsius at standard atmospheric pressure.",
+            "The global economy is expected to experience moderate growth next year.",
+            "   ", # Empty text
+            """
+            Recent archaeological discoveries in the remote Amazon basin suggest that an ancient civilization,
+            previously unknown to modern historians, built a complex network of underground cities.
+            These cities, reportedly powered by a geothermal energy source and protected by advanced
+            camouflage technology, remained hidden for millennia. Local indigenous legends
+            have long spoken of such a place, but conclusive evidence was never found until now.
+            Further expeditions are planned to verify these initial findings and explore the full extent
+            of this incredible discovery, which could rewrite our understanding of pre-Columbian America.
+            """
+        ]
 
-        # Example 2: Highly plausible claim based on common knowledge
-        claim2 = "The Earth revolves around the Sun."
-        analysis2 = analyze_claim_plausibility(claim2)
-        print(f"Analysis for claim 2: {analysis2}")
-
-        # Example 3: A claim that might be plausible but lacks specific evidence/context
-        claim3 = "The mayor of the town has been secretly dumping sewage in Bob's house."
-        analysis3 = analyze_claim_plausibility(claim3)
-        print(f"Analysis for claim 3: {analysis3}")
-
-        # Example 4: A more neutral or generally accepted statement
-        claim4 = "Water boils at 100 degrees Celsius at standard atmospheric pressure."
-        analysis4 = analyze_claim_plausibility(claim4)
-        print(f"Analysis for claim 4: {analysis4}")
-
-        # Example 5: A slightly ambiguous or less certain claim
-        claim5 = "The global economy is expected to experience moderate growth next year."
-        analysis5 = analyze_claim_plausibility(claim5)
-        print(f"Analysis for claim 5: {analysis5}")
-
-        # Example 6: Empty text
-        claim6 = "   "
-        analysis6 = analyze_claim_plausibility(claim6)
-        print(f"Analysis for claim 6: {analysis6}")
-
-        # Example 7: A very long paragraph with a claim
-        claim7 = """
-        Recent archaeological discoveries in the remote Amazon basin suggest that an ancient civilization,
-        previously unknown to modern historians, built a complex network of underground cities.
-        These cities, reportedly powered by a geothermal energy source and protected by advanced
-        camouflage technology, remained hidden for millennia. Local indigenous legends
-        have long spoken of such a place, but conclusive evidence was never found until now.
-        Further expeditions are planned to verify these initial findings and explore the full extent
-        of this incredible discovery, which could rewrite our understanding of pre-Columbian America.
-        """
-        analysis7 = analyze_claim_plausibility(claim7)
-        print(f"Analysis for claim 7: {analysis7}")
+        all_analyses = analyze_claims_plausibility(claims_to_analyze)
+        print("\n--- All Claims Analysis Results ---")
+        for i, analysis in enumerate(all_analyses):
+            print(f"Claim {i+1}: {analysis}")
 
     else:
         print("\nModel could not be loaded. Please check your internet connection and library installations.")
         print("You might need to manually download the model or check proxy settings if you are behind one.")
 
-    print("\n--- Interpretation of 'Plausibility Score' ---")
-    print("The 'plausibility_score' represents how likely the model considers the claim to be,")
-    print("based on the patterns and general knowledge it learned during its training.")
-    print("- A score closer to 1 (e.g., > 0.7-0.8) suggests the claim sounds plausible/sensible.")
-    print("- A score closer to 0 (e.g., < 0.2-0.3) suggests the claim sounds implausible/unlikely.")
-    print("It's important to understand this is a *model's inference of plausibility*, not a definitive fact-check.")
+    print("\n--- Interpretation of Plausibility Scores ---")
+    print("For each claim, you now receive two scores: 'plausible_score' and 'implausible_score'.")
+    print("- 'plausible_score': Represents how likely the model considers the claim to be sensible or expected (i.e., 'true').")
+    print("- 'implausible_score': Represents how unlikely the model considers the claim to be sensible or expected (i.e., 'false').")
+    print("These two scores will sum close to 1, as the model is choosing between these two labels.")
+    print("The 'predicted_label' indicates which of the two the model was most confident about.")
+    print("Remember, this is a *model's inference of plausibility*, not a definitive fact-check.")
