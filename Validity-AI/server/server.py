@@ -1,13 +1,16 @@
 from fastapi import FastAPI
 from fastapi.responses import PlainTextResponse
-from auth import auth_router
-from api import api_router
+from sub_routes.auth.auth import auth_router
+from sub_routes.api.api import api_router
+
+from dotenv import load_dotenv
+load_dotenv()
 
 app = FastAPI()
 
-@app.get("/", response_class=PlainTextResponse)
-async def index():
-    return "Hello from index!"
+# @app.get("/", response_class=PlainTextResponse)
+# async def index():
+#     return "Hello from index!"
 
 # Mount auth sub-router
 app.include_router(auth_router, prefix="/auth")

@@ -101,50 +101,50 @@ def check_text_meaning_similarity(text1: str, text2: str) -> Dict[str, Any]:
 
 
 # --- Examples of Usage ---
-if __name__ == "__main__":
-    if similarity_analyzer: # Only run examples if the model loaded successfully
-        # Example 1: Similar meaning
-        text_sim1_a = "The quick brown fox jumps over the lazy dog."
-        text_sim1_b = "A speedy brown fox leaps over a lethargic canine."
-        similarity_analysis1 = check_text_meaning_similarity(text_sim1_a, text_sim1_b)
-        print(f"Similarity Analysis 1: {similarity_analysis1}")
+# if __name__ == "__main__":
+#     if similarity_analyzer: # Only run examples if the model loaded successfully
+#         # Example 1: Similar meaning
+#         text_sim1_a = "The quick brown fox jumps over the lazy dog."
+#         text_sim1_b = "A speedy brown fox leaps over a lethargic canine."
+#         similarity_analysis1 = check_text_meaning_similarity(text_sim1_a, text_sim1_b)
+#         print(f"Similarity Analysis 1: {similarity_analysis1}")
 
-        # Example 2: Different meaning
-        text_sim2_a = "The capital of France is Paris."
-        text_sim2_b = "Mount Everest is the highest mountain in the world."
-        similarity_analysis2 = check_text_meaning_similarity(text_sim2_a, text_sim2_b)
-        print(f"Similarity Analysis 2: {similarity_analysis2}")
+#         # Example 2: Different meaning
+#         text_sim2_a = "The capital of France is Paris."
+#         text_sim2_b = "Mount Everest is the highest mountain in the world."
+#         similarity_analysis2 = check_text_meaning_similarity(text_sim2_a, text_sim2_b)
+#         print(f"Similarity Analysis 2: {similarity_analysis2}")
 
-        # Example 3: Subtle difference
-        text_sim3_a = "He bought a new car."
-        text_sim3_b = "He acquired a new vehicle."
-        similarity_analysis3 = check_text_meaning_similarity(text_sim3_a, text_sim3_b)
-        print(f"Similarity Analysis 3: {similarity_analysis3}")
+#         # Example 3: Subtle difference
+#         text_sim3_a = "He bought a new car."
+#         text_sim3_b = "He acquired a new vehicle."
+#         similarity_analysis3 = check_text_meaning_similarity(text_sim3_a, text_sim3_b)
+#         print(f"Similarity Analysis 3: {similarity_analysis3}")
 
-        # Example 4: Contradictory meaning
-        text_sim4_a = "The sun rises in the east."
-        text_sim4_b = "The sun sets in the east."
-        similarity_analysis4 = check_text_meaning_similarity(text_sim4_a, text_sim4_b)
-        print(f"Similarity Analysis 4: {similarity_analysis4}")
+#         # Example 4: Contradictory meaning
+#         text_sim4_a = "The sun rises in the east."
+#         text_sim4_b = "The sun sets in the east."
+#         similarity_analysis4 = check_text_meaning_similarity(text_sim4_a, text_sim4_b)
+#         print(f"Similarity Analysis 4: {similarity_analysis4}")
 
-        # Example 5: Shorter, simple texts
-        text_sim5_a = "Hello there."
-        text_sim5_b = "Hi."
-        similarity_analysis5 = check_text_meaning_similarity(text_sim5_a, text_sim5_b)
-        print(f"Similarity Analysis 5: {similarity_analysis5}")
+#         # Example 5: Shorter, simple texts
+#         text_sim5_a = "Hello there."
+#         text_sim5_b = "Hi."
+#         similarity_analysis5 = check_text_meaning_similarity(text_sim5_a, text_sim5_b)
+#         print(f"Similarity Analysis 5: {similarity_analysis5}")
 
-        # Example 6: Very different concepts
-        text_sim6_a = "Quantum physics is fascinating."
-        text_sim6_b = "Cooking is an art."
-        similarity_analysis6 = check_text_meaning_similarity(text_sim6_a, text_sim6_b)
-        print(f"Similarity Analysis 6: {similarity_analysis6}")
+#         # Example 6: Very different concepts
+#         text_sim6_a = "Quantum physics is fascinating."
+#         text_sim6_b = "Cooking is an art."
+#         similarity_analysis6 = check_text_meaning_similarity(text_sim6_a, text_sim6_b)
+#         print(f"Similarity Analysis 6: {similarity_analysis6}")
 
-    else:
-        print("\nModel could not be loaded. Please check your internet connection and library installations.")
-        print("You might need to manually download the model or check proxy settings if you are behind one.")
+#     else:
+#         print("\nModel could not be loaded. Please check your internet connection and library installations.")
+#         print("You might need to manually download the model or check proxy settings if you are behind one.")
 
-    print("\n--- Interpretation of Text Meaning Similarity Scores ---")
-    print("The 'same_meaning_score' indicates the model's confidence that the two provided texts convey the same semantic meaning.")
-    print("- A higher 'same_meaning_score' (closer to 1) suggests strong semantic equivalence.")
-    print("- A higher 'different_meaning_score' (closer to 1) suggests distinct semantic meanings.")
-    print("These two scores will sum close to 1, as the model is choosing between these two labels.")
+#     print("\n--- Interpretation of Text Meaning Similarity Scores ---")
+#     print("The 'same_meaning_score' indicates the model's confidence that the two provided texts convey the same semantic meaning.")
+#     print("- A higher 'same_meaning_score' (closer to 1) suggests strong semantic equivalence.")
+#     print("- A higher 'different_meaning_score' (closer to 1) suggests distinct semantic meanings.")
+#     print("These two scores will sum close to 1, as the model is choosing between these two labels.")
