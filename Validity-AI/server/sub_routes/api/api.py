@@ -18,5 +18,8 @@ async def text_analyzer(req: Request, res: JSONResponse):
     return
 
 @api_router.get("/tea", response_class=JSONResponse)
-async def text_equivilence_analyzer():
-    return "Auth module is up!"
+async def text_equivilence_analyzer(req: Request, res: JSONResponse):
+    claim = req.query.params.get("claim")
+    claims = re.split(r'[.;?!]', claim) 
+    res.body = check_text_meaning_similarity(claims)
+    return
