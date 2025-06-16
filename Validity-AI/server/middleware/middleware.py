@@ -1,6 +1,6 @@
 from fastapi import Request, HTTPException, status
 import jwt
-from jwt import JWTError
+from jwt import PyJWTError
 
 import os
 
@@ -20,7 +20,7 @@ async def auth_middleware(request: Request):
     try:
         payload = jwt.decode(token, secret_key, algorithms=[algorithm])
         # Proceed to API endpoint
-    except JWTError:
+    except PyJWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or expired authentication token"

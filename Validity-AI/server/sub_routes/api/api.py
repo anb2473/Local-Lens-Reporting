@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse
-from server.middleware.middleware import auth_middleware
+from middleware.middleware import auth_middleware
 from models.text_analyzer import analyze_claims_plausibility
 from models.text_equivilence_analyzer import check_text_meaning_similarity
 

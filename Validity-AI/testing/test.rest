@@ -1,0 +1,11 @@
+### Test API status endpoint (should require valid JWT cookie)
+POST http://localhost:8000/auth/login
+Content-Type: application/json
+
+{
+  "passw": "passw0rd"
+}
+
+### Test API status endpoint with invalid JWT cookie
+GET http://localhost:8000/api/status
+Cookie: access_token=invalidtoken
