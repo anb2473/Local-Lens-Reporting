@@ -23,11 +23,11 @@ async def text_analyzer(req: Request, res: JSONResponse):
 
 @api_router.get("/tea", response_class=JSONResponse)
 async def text_equivilence_analyzer(req: Request, res: JSONResponse):
-    if not req.__contains__("query") or req.query.params.get("claim") is None:
+    if not req.__contains__("query") or req.query.params.get("claim-1") is None or req.query.params.get("claim-2") is None:
         res.status_code = 400
         res.body = {"error": "Missing 'claim' parameter in query string."}
         return  
-    claim = req.query.params.get("claim")
-    claims = re.split(r'[.;?!]', claim) 
-    res.body = check_text_meaning_similarity(claims)
+    claim1 = req.query.params.get("claim-1")
+    claim2 = req.query.params.get("claim-2")
+    res.body = check_text_meaning_similarity(claim1, claim2)
     return
