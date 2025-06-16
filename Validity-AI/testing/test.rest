@@ -7,5 +7,9 @@ Content-Type: application/json
 }
 
 ### Test API status endpoint with invalid JWT cookie
-GET http://localhost:8000/api/status
+GET http://localhost:8000/api/ta
 Cookie: access_token=invalidtoken
+
+### Test API status endpoint with valid JWT cookie
+GET http://localhost:8000/api/ta
+Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4ZGE4NjJmYTNmNjgzNDM5OGUxMzQzN2FhZWEzNmI3YiIsImV4cCI6MTc1MDA1MjUxN30.8eWcvVIbQOHD6XWnpynMQRdxON8T6kd0w2JNAer9I_8
