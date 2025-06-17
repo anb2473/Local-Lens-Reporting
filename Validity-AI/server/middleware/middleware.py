@@ -9,9 +9,9 @@ salt = os.getenv("SALT")
 algorithm = os.getenv("ALGORITHM")
 secret_key = os.getenv("SECRET_KEY")
 
-async def auth_middleware(request: Request):
+async def auth_middleware(req: Request):
     # Example: Check for a JWT in cookies
-    token = request.cookies.get("access_token")
+    token = req.cookies.get("access_token")
     if not token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
