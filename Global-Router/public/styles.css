@@ -1,6 +1,7 @@
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
+    background-color: #111111;
 }
 
 img {
@@ -9,11 +10,120 @@ img {
     display: block; /* Ensures images behave like block elements for layout */
 }
 
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #181818;
+    padding: 16px 32px;
+    border-radius: 0 0 8px 8px;
+    box-shadow: none;
+    margin-bottom: 50px;
+    z-index: 1000;
+}
+
+.header .logo {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #fff;
+    letter-spacing: 2px;
+    text-shadow: none;
+}
+
+.header .nav-links {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    max-width: 100vw;
+    box-sizing: border-box;
+    padding-right: 50px;
+}
+
+.header .nav-links a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.2rem;
+    padding: 8px 16px;
+    border-radius: 6px;
+    background: none;
+    -webkit-background-clip: initial;
+    background-clip: initial;
+    -webkit-text-fill-color: initial;
+    transition: background 0.2s, color 0.2s;
+}
+
+.header .nav-links a:hover {
+    background: #222;
+    color: #fff;
+    -webkit-text-fill-color: initial;
+}
+
+.header .menu-btn {
+    display: none;
+    background: #222;
+    border: none;
+    color: #fff;
+    font-size: 2rem;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    box-shadow: none;
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: row;
+        padding: 16px 12px;
+    }
+    .header .nav-links {
+        display: none;
+        position: absolute;
+        top: 70px;
+        right: 12px;
+        flex-direction: column;
+        background: #222;
+        border-radius: 10px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+        padding: 16px 0;
+        z-index: 100;
+    }
+    .header .nav-links.open {
+        display: flex;
+    }
+    .header .menu-btn {
+        display: block;
+    }
+}
+
 .banner {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    padding: 50px;
+}
+
+@media (max-width: 768px) {
+    .banner {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 100px;
+    }
+
+    img {
+        max-width: 75%;
+    }
+}
+
+@media (max-width: 550px) {
+    img {
+        max-width: 100%;
+    }
 }
 
 .falling-text {
