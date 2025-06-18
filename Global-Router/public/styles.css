@@ -33,6 +33,7 @@ img {
     color: #fff;
     letter-spacing: 2px;
     text-shadow: none;
+    margin-left: 20px;
 }
 
 .header .nav-links {
@@ -65,7 +66,7 @@ img {
 
 .header .menu-btn {
     display: none;
-    background: #222;
+    background: none;
     border: none;
     color: #fff;
     font-size: 2rem;
@@ -73,6 +74,36 @@ img {
     padding: 8px 16px;
     cursor: pointer;
     box-shadow: none;
+    margin-right: 50px;
+    position: relative;
+    width: 40px;
+    height: 40px;
+    z-index: 1101; /* higher than nav-links */
+}
+
+.header .menu-btn .bar {
+    display: block;
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    height: 4px;
+    background: #fff;
+    border-radius: 2px;
+    transition: 0.4s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+.header .menu-btn .bar1 { top: 10px; }
+.header .menu-btn .bar2 { top: 18px; }
+.header .menu-btn .bar3 { top: 26px; }
+
+.header .menu-btn.open .bar1 {
+    transform: translateY(8px) rotate(45deg);
+}
+.header .menu-btn.open .bar2 {
+    opacity: 0;
+}
+.header .menu-btn.open .bar3 {
+    transform: translateY(-8px) rotate(-45deg);
 }
 
 @media (max-width: 768px) {
@@ -81,19 +112,28 @@ img {
         padding: 16px 12px;
     }
     .header .nav-links {
-        display: none;
-        position: absolute;
-        top: 70px;
-        right: 12px;
         flex-direction: column;
+        position: absolute;
+        top: 100%;
+        right: 12px;
         background: #222;
         border-radius: 10px;
         box-shadow: 0 2px 12px rgba(0,0,0,0.3);
-        padding: 16px 0;
-        z-index: 100;
+        padding: 0;
+        z-index: 1100;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-20px) scale(0.98);
+        transition: opacity 0.35s cubic-bezier(.68,-0.55,.27,1.55), transform 0.35s cubic-bezier(.68,-0.55,.27,1.55);
+        width: max-content;
+        min-width: 150px;
     }
     .header .nav-links.open {
-        display: flex;
+        opacity: 1;
+        pointer-events: auto;
+        padding: 16px 0;
+        transform: translateY(0) scale(1);
+        transition-delay: 0.1s;
     }
     .header .menu-btn {
         display: block;

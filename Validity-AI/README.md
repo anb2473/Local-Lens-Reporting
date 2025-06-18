@@ -33,7 +33,7 @@ These prerequisits can be installed as follows:
 
 1. **Install Python:** execute the command `python` in your terminal, which should take you directly to a python installation page if python is not found on the system. You can also go directly to the installation page at <https://www.python.org/downloads/>
 2. **Open the Server Directory:** execute the command `cd path/to/server`
-2. **Install Required Libraries:** execute the command `pip install -r requirements.txt`. If any installations fail ensure you are connected to the internet before retrying
+3. **Install Required Libraries:** execute the command `pip install -r requirements.txt`. If any installations fail ensure you are connected to the internet before retrying
 
 ### Execution Instructions
 

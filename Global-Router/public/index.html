@@ -13,7 +13,11 @@
             <a href="#">About</a>
             <a href="#">Contact</a>
         </nav>
-        <button class="menu-btn" aria-label="Open navigation">&#9776;</button>
+        <button class="menu-btn" aria-label="Open navigation">
+            <span class="bar bar1"></span>
+            <span class="bar bar2"></span>
+            <span class="bar bar3"></span>
+        </button>
     </header>
 
     <div class="banner">
@@ -23,5 +27,18 @@
         </div>
         <img src="images/logo.png" alt="">
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuBtn = document.querySelector('.header .menu-btn');
+            const navLinks = document.querySelector('.header .nav-links');
+            if (menuBtn && navLinks) {
+                menuBtn.addEventListener('click', function() {
+                    menuBtn.classList.toggle('open');
+                    navLinks.classList.toggle('open');
+                });
+            }
+        });
+    </script>
 </body>
 </html>
