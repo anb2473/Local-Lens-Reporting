@@ -1,0 +1,47 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+img {
+    max-width: 50%; /* Makes images responsive, so they don't overflow their container */
+    height: auto;    /* Maintains aspect ratio */
+    display: block; /* Ensures images behave like block elements for layout */
+}
+
+.banner {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.falling-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.falling-text .major-text {
+    font-size: 4rem;
+    background-color: #ff8177;
+    background-image: linear-gradient(to top, #ff0844 0%, #ffb199 100%);
+    background-size: 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+.falling-text .minor-text {
+    font-size: 2.5rem;
+    background-color: #b721ff;
+    background-image: linear-gradient(to top, #b721ff 0%, #21d4fd 100%);
+    background-size: 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 0;
+    margin: 0;
+}

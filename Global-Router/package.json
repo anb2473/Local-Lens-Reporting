@@ -1,7 +1,8 @@
 {
   "name": "global-router",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
+  "type": "module",
   "scripts": {
     "dev": "node --watch server.js"
   },
@@ -9,6 +10,7 @@
   "license": "MIT",
   "description": "Global router for managing multiple microservices depending on user region with Kubernetes",
   "dependencies": {
+    "dotenv": "^16.5.0",
     "express": "^5.1.0"
   }
 }
