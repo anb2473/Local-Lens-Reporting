@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>About & Contact - Local Lens</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1 class="logo">Local Lens</h1>
+        <nav class="nav-links">
+            <a href="/">Home</a>
+            <a href="our-solution">Our Solution</a>
+            <a href="about.html">About Me</a>
+        </nav>
+        <button class="menu-btn" aria-label="Open navigation">
+            <span class="bar bar1"></span>
+            <span class="bar bar2"></span>
+            <span class="bar bar3"></span>
+        </button>
+    </header>
+
+    <main>
+        <div class="banner">
+            <section class="about-section">
+                <h2>About Me</h2>
+                <p>
+                    I am a 13-year-old student with a passion for software engineering. 
+                    Over the past three years, I have been dedicated to learning and 
+                    building in the world of software development. My journey began with 
+                    Python, and as my curiosity grew, I explored deeper into computer science 
+                    and the leading technologies shaping the future. I am always eager 
+                    to learn, create, and contribute to innovative projects.
+                </p>
+            </section>
+            <section class="contact-section">
+                <div class="contact-card">
+                    <h2>Contact</h2>
+                    <p><strong>Name:</strong> Austin Blass</p>
+                    <p><strong>Email:</strong> <a href="mailto:austinnabilblass@gmail.com">austinnabilblass@gmail.com</a></p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuBtn = document.querySelector('.header .menu-btn');
+            const navLinks = document.querySelector('.header .nav-links');
+            if (menuBtn && navLinks) {
+                menuBtn.addEventListener('click', function() {
+                    menuBtn.classList.toggle('open');
+                    navLinks.classList.toggle('open');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

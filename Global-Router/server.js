@@ -25,6 +25,14 @@ app.get('/', (req, res) => {    // Send a login page
     res.sendFile(path.join(__dirname, 'public', 'index.html'))
 });
 
+app.get('/our-solution', (req, res) => {    // Send a login page
+    res.sendFile(path.join(__dirname, 'public', 'our-solution.html'))
+});
+
+app.get('/contact', (req, res) => {    // Send a login page
+    res.sendFile(path.join(__dirname, 'public', 'contact.html'))
+});
+
 app.listen(PORT, () => {
     console.log(`Server active at http://127.0.0.1:${PORT}`);
 });

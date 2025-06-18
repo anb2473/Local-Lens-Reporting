@@ -182,6 +182,7 @@ img {
     padding: 0;
     margin: 0;
     margin-bottom: 10px;
+    margin-left: 10px;
 }
 
 .falling-text .minor-text {
@@ -194,4 +195,201 @@ img {
     -webkit-text-fill-color: transparent;
     padding: 0;
     margin: 0;
+}
+
+/* Talking Points Section */
+.talking-points-section {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 32px;
+    margin: 60px auto 40px auto;
+    flex-wrap: wrap;
+    max-width: 1200px;
+}
+
+.talking-point-card {
+    background: #181818;
+    color: #fff;
+    border-radius: 18px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    width: 320px;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 24px;
+    text-align: center;
+    transition: transform 0.25s cubic-bezier(.68,-0.55,.27,1.55), box-shadow 0.25s cubic-bezier(.68,-0.55,.27,1.55);
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.talking-point-card:hover {
+    transform: translateY(-18px) scale(1.04);
+    box-shadow: 0 8px 32px rgba(255,129,119,0.18), 0 2px 12px rgba(0,0,0,0.22);
+    background: linear-gradient(120deg, #ff8177 0%, #ffb199 100%);
+    color: #181818;
+}
+
+.talking-point-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+    background: none;
+    color: inherit;
+    font-weight: bold;
+}
+
+.talking-point-card p {
+    font-size: 1.1rem;
+    margin: 0;
+    color: inherit;
+}
+
+@media (max-width: 1100px) {
+    .talking-points-section {
+        gap: 20px;
+    }
+    .talking-point-card {
+        width: 90vw;
+        min-width: 220px;
+        max-width: 350px;
+    }
+}
+
+@media (max-width: 768px) {
+    .talking-points-section {
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+    }
+    .talking-point-card {
+        width: 90vw;
+        min-width: 180px;
+        max-width: 350px;
+    }
+}
+
+/* Tech Stack Section */
+.tech-stack-section {
+    background: #23272f;
+    color: #fff;
+    border-radius: 18px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.13);
+    max-width: 900px;
+    margin: 40px auto 60px auto;
+    padding: 40px 32px 32px 32px;
+    text-align: left;
+    font-size: 1.15rem;
+    line-height: 1.7;
+}
+
+.tech-stack-section h2 {
+    font-size: 2rem;
+    margin-bottom: 18px;
+    background: linear-gradient(90deg, #ff8177 0%, #ffb199 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    font-weight: bold;
+}
+
+.tech-stack-section strong {
+    color: #ff8177;
+    font-weight: bold;
+}
+
+@media (max-width: 900px) {
+    .tech-stack-section {
+        padding: 28px 10vw 24px 10vw;
+        font-size: 1.05rem;
+    }
+    .tech-stack-section h2 {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .tech-stack-section {
+        padding: 18px 4vw 16px 4vw;
+        font-size: 1rem;
+    }
+    .tech-stack-section h2 {
+        font-size: 1.1rem;
+    }
+}
+
+/* About Section */
+.about-section {
+    background: #23272f;
+    color: #fff;
+    border-radius: 18px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.13);
+    max-width: 700px;
+    margin: 140px auto 60px auto; /* Increased top margin to 120px */
+    padding: 40px 32px 32px 32px;
+    text-align: left;
+    font-size: 1.15rem;
+    line-height: 1.7;
+}
+
+@media (max-width: 900px) {
+    .about-section {
+        padding: 28px 10vw 24px 10vw;
+        font-size: 1.05rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .about-section {
+        padding: 18px 4vw 16px 4vw;
+        font-size: 1rem;
+    }
+}
+
+.contact-section {
+    margin: 120px auto 60px auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.contact-card {
+    background: #23272f;
+    color: #fff;
+    border-radius: 18px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.13);
+    max-width: 400px;
+    padding: 32px 28px;
+    text-align: left;
+    font-size: 1.1rem;
+    line-height: 1.7;
+}
+.contact-card a {
+    color: #4fc3f7;
+    text-decoration: none;
+}
+.contact-card a:hover {
+    text-decoration: underline;
+}
+
+.cta-button {
+    display: inline-block;
+    background: linear-gradient(135deg, #ff8177 0%, #ffb199 100%);
+    color: #fff;
+    padding: 15px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 129, 119, 0.3);
+    margin-top: 20px;
+}
+
+.cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 129, 119, 0.4);
 }
