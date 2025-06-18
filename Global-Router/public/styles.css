@@ -9,6 +9,10 @@ body {
     transition: opacity 1s ease-in-out, filter 1s ease-in-out;
 }
 
+body, main {
+    padding-top: 80px; /* Adjust to match your header's height */
+}
+
 body.loaded {
     opacity: 1; /* Fade in */
     filter: blur(0px); /* remove blur */
@@ -33,7 +37,7 @@ img {
     padding: 16px 32px;
     border-radius: 0 0 8px 8px;
     box-shadow: none;
-    margin-bottom: 50px;
+    /* margin-bottom: 50px;  <-- REMOVE THIS LINE */
     z-index: 1000;
 }
 
