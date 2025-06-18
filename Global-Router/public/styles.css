@@ -7,6 +7,7 @@ body {
     /* Optional blur */
     filter: blur(10px);
     transition: opacity 1s ease-in-out, filter 1s ease-in-out;
+    overflow-x: hidden;
 }
 
 body, main {
@@ -154,7 +155,7 @@ img {
     }
 }
 
-.banner {
+.shortfall-banner, .banner {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -171,6 +172,14 @@ img {
 
     img {
         max-width: 75%;
+    }
+}
+
+@media (max-width: 1028px) {
+    .shortfall-banner {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 100px;
     }
 }
 
@@ -196,7 +205,6 @@ img {
     padding: 0;
     margin: 0;
     margin-bottom: 10px;
-    margin-left: 10px;
 }
 
 .falling-text .minor-text {
@@ -319,6 +327,7 @@ img {
     .tech-stack-section {
         padding: 28px 10vw 24px 10vw;
         font-size: 1.05rem;
+        margin: 0px 25px;
     }
     .tech-stack-section h2 {
         font-size: 1.4rem;
@@ -342,7 +351,7 @@ img {
     border-radius: 18px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.13);
     max-width: 700px;
-    margin: 140px auto 60px auto; /* Increased top margin to 120px */
+    margin: 0 60px auto;
     padding: 40px 32px 32px 32px;
     text-align: left;
     font-size: 1.15rem;
@@ -364,7 +373,7 @@ img {
 }
 
 .contact-section {
-    margin: 120px auto 60px auto;
+    margin: 40px 60px auto;
     display: flex;
     justify-content: center;
     align-items: flex-start;
