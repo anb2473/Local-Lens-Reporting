@@ -1,7 +1,17 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
+    margin: 0;
     background-color: #111111;
+    opacity: 0; /* Start with opacity 0 */
+    transition: opacity 1s ease-in-out; /* Add transition */
+    /* Optional blur */
+    filter: blur(10px);
+    transition: opacity 1s ease-in-out, filter 1s ease-in-out;
+}
+
+body.loaded {
+    opacity: 1; /* Fade in */
+    filter: blur(0px); /* remove blur */
 }
 
 img {
