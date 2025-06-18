@@ -4,7 +4,8 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "prod": "node server.js"
   },
   "author": "Austin Blass <austinnabilblass@gmail.com>",
   "license": "MIT",
