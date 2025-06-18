@@ -1,0 +1,4 @@
+__pycache__
+.env
+sub_routes/api/__pycache__
+sub_routes/auth/__pycache__

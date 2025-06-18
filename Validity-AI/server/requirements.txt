@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+pyjwt
+pillow
+torch
+transformers
+dotenv
