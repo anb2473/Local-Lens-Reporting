@@ -1,6 +1,14 @@
 # AI Server
 
-## Docker (Recommended)
+## Docker Compose (Recommended)
+
+In order to setup and execute the server via Docker with Docker compose:
+
+1. **Open the Server Directory:** execute the command `cd path/to/server`
+2. **Build the Docker Images:** execute the command `docker compose build`
+3. **Run the Dockerized System via Compose:** execute the command `docker compose up`
+
+## Docker Manual
 
 ### Setup and Run via Docker
 
