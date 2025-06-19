@@ -1,8 +1,6 @@
 # Global Router
 
-## Overview
-
-The Global Router is the entry point for the Local Lens platform. It directs users to the appropriate regional AI server based on their location, ensuring efficient routing and scalability. The router is built with Node.js and Express, and is designed to be easily deployable and maintainable.
+**NOTE:** Before executing the system, first execute the command `cd path/to/Global-Router/local`, and then run the command `npm install` to update all packages
 
 ## Docker (Recommended)
 
@@ -11,7 +9,7 @@ The Global Router is the entry point for the Local Lens platform. It directs use
 To set up and run the Global Router using Docker:
 
 1. **Open the Router Directory:**  
-   Execute the command `cd path/to/Global-Router`
+   Execute the command `cd path/to/Global-Router/local`
 2. **Build the Docker Image:**  
    Execute the command `docker build -t global-router .`  
    (**NOTE:** You can change the name of the Docker image, but you must use the same name in the run command.)

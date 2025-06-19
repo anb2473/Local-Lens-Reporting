@@ -11,7 +11,9 @@
   "license": "MIT",
   "description": "Global router for managing multiple microservices depending on user region with Kubernetes",
   "dependencies": {
+    "cookie-parser": "^1.4.7",
     "dotenv": "^16.5.0",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "path": "^0.12.7"
   }
 }
