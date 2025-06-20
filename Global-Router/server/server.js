@@ -4,6 +4,7 @@ import express from 'express'
 import cookieParser from 'cookie-parser';
 import {fileURLToPath} from 'url';
 import path, {dirname} from 'path';
+import auth from './routes/auth/auth.js';
 
 const app = express();
 
@@ -32,6 +33,8 @@ app.get('/our-solution', (req, res) => {    // Send a login page
 app.get('/contact', (req, res) => {    // Send a login page
     res.sendFile(path.join(__dirname, 'public', 'contact.html'))
 });
+
+app.use('/auth', auth.router);  // Use the auth routes
 
 app.listen(PORT, () => {
     console.log(`Server active at http://127.0.0.1:${PORT}`);
