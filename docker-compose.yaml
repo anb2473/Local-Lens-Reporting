@@ -1,5 +1,6 @@
 version: '3'
 services:
+  # AI Service (No Database)
   validity-ai-server-service:
     build: ./Validity-AI/server
     container_name: validity-ai-server
@@ -11,6 +12,7 @@ services:
     ports:
       - "8000:8000"
 
+  # Global Router Service (With Database)
   global-router-server-service:
     build: ./Global-Router/server
     container_name: global-router
@@ -22,6 +24,22 @@ services:
     ports:
       - "3000:3000"
 
+  # Global Router Database Service (Manages User Data)
+  global-router-db-service:
+    image: postgres:13-alpine
+    container_name: global-router-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: global_router_db
+    ports:
+      - "4000:5432"
+    volumes:
+      - global-router-db-data:/var/lib/postgresql/data
+
+  # Washington DC Area Service (With Database)
+
+  # Washington DC Area Database Service (Manages Regional Events)
   washington-dc-area:
     image: postgres:13-alpine
     container_name: washington-dc-db
@@ -35,4 +53,5 @@ services:
       - washington-dc-db-data:/var/lib/postgresql/data
 
 volumes:
+  global-router-db-data:
   washington-dc-db-data:
