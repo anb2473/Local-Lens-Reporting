@@ -1,14 +1,14 @@
 from fastapi import FastAPI
 from fastapi.responses import PlainTextResponse
-from sub_routes.auth.auth import auth_router
-from sub_routes.api.api import api_router
+from routes.auth.auth import auth_router
+from routes.api.api import api_router
 
 from dotenv import load_dotenv
 load_dotenv()
 
 import os
 
-port = int(os.getenv("PORT")) or 8000
+port = int(os.getenv("PORT", 8000))
 
 app = FastAPI()
 

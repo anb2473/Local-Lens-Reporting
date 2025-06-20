@@ -1,0 +1,38 @@
+version: '3'
+services:
+  validity-ai-server-service:
+    build: ./Validity-AI/server
+    container_name: validity-ai-server
+    environment:
+      - PASSW=0407c14bf6df0055ab809f62c89f35983f4520ce946339c916e5111fcb0e30e2
+      - SALT=2623a342b266b854bc45748ae49b1723907b4b2f337c34ddcf6a1ab359fbcc21
+      - ALGORITHM=HS256
+      - SECRET_KEY=ebd9197c201d1e315a5bea2858c7cc50e8a21ab4be7874212cbbd7b489cede95
+    ports:
+      - "8000:8000"
+
+  global-router-server-service:
+    build: ./Global-Router/server
+    container_name: global-router
+    environment:
+      - PASSW=0407c14bf6df0055ab809f62c89f35983f4520ce946339c916e5111fcb0e30e2
+      - SALT=2623a342b266b854bc45748ae49b1723907b4b2f337c34ddcf6a1ab359fbcc21
+      - ALGORITHM=HS256
+      - SECRET_KEY=ebd9197c201d1e315a5bea2858c7cc50e8a21ab4be7874212cbbd7b489cede95
+    ports:
+      - "3000:3000"
+
+  washington-dc-area:
+    image: postgres:13-alpine
+    container_name: washington-dc-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: washington_dc_db
+    ports:
+      - "4000:5432"
+    volumes:
+      - washington-dc-db-data:/var/lib/postgresql/data
+
+volumes:
+  washington-dc-db-data:
