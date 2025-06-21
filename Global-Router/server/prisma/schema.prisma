@@ -18,6 +18,6 @@ model User {
   fname     String
   lname     String
   email     String    @unique
-  password  String
+  passw     String
   active    Boolean   @default(true)
 }

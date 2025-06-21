@@ -11,9 +11,12 @@
   "license": "MIT",
   "description": "Global router for managing multiple microservices depending on user region with Kubernetes",
   "dependencies": {
+    "@prisma/client": "^6.10.1",
+    "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "prisma": "^6.10.1"
   }
 }
