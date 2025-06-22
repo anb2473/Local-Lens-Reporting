@@ -21,16 +21,16 @@
     </header>
 
     <main style="display: flex; justify-content: center;">
-        <h1 id="err" style="color: #ff8177;"></h1>
-
-        <form action="/auth/sign-up">
+        <form id="sign-up-form">
+            <h3 id="err" style="color: #ff8177;"></h3>
+            <br>
             <div class="form-group">
-                <label for="fname">Last Name:</label>
-                <input type="fname" id="fname" name="fname" required autocomplete="given-name">
+                <label for="fname">First Name:</label>
+                <input type="text" id="fname" name="fname" required autocomplete="given-name">
             </div>
             <div class="form-group">
                 <label for="lname">Last Name:</label>
-                <input type="lname" id="lname" name="lname" required autocomplete="family-name">
+                <input type="text" id="lname" name="lname" required autocomplete="family-name">
             </div>
             <div class="form-group">
                 <label for="email">Email:</label>
@@ -38,46 +38,40 @@
             </div>
             <div class="form-group">
                 <label for="passw">Password:</label>
-                <input type="passw" id="passw" name="passw" required autocomplete="current-passw">
+                <input type="password" id="passw" name="passw" required autocomplete="current-password">
             </div>
             <button type="submit">Sign Up</button>
-                
             <br>
             <br>
-
-            <a href="login">If you do already have an acccount, click here to log in</a>
-
-            <script>
-                document.querySelector('form').addEventListener('submit', async function(e) {
-                    e.preventDefault();
-                    const fname = document.getElementById('fname').value;
-                    const lname = document.getElementById('lname').value;
-                    const email = document.getElementById('email').value;
-                    const passw = document.getElementById('passw').value;
-
-                    const err = document.getElementById('err');
-                    try {
-                        const res = await fetch('auth/sign-up', {
-                            method: 'POST',
-                            headers: {'Content-Type': 'application/json'},
-                            body: JSON.stringify({ fname, lname, email, passw })
-                        });
-                        if (res.ok) {
-                            // Redirect or show success
-                            window.location.href = '/';
-                        } else {
-                            // Handle error
-                            err.textContent = res.err;
-                        }
-                    } catch (err) {
-                        err.textContent = 'An error occurred';
-                    }
-                });
-            </script>
+            <a href="login">If you already have an account, click here to log in</a>
         </form>
     </main>
 
     <script>
+        async function handleSignUp(e) {
+            e.preventDefault();
+            const fname = document.getElementById('fname').value;
+            const lname = document.getElementById('lname').value;
+            const email = document.getElementById('email').value;
+            const passw = document.getElementById('passw').value;
+            const err = document.getElementById('err');
+            try {
+                const res = await fetch('auth/sign-up', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ fname, lname, email, passw })
+                });
+                if (res.ok) {
+                    window.location.href = '/';
+                } else {
+                    const data = await res.json();
+                    err.textContent = data.err || 'Sign up failed';
+                }
+            } catch (error) {
+                err.textContent = 'An error occurred';
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const menuBtn = document.querySelector('.header .menu-btn');
             const navLinks = document.querySelector('.header .nav-links');
@@ -88,6 +82,11 @@
                 });
             }
             document.body.classList.add('loaded');
+
+            const signUpForm = document.getElementById('sign-up-form');
+            if (signUpForm) {
+                signUpForm.addEventListener('submit', handleSignUp);
+            }
         });
     </script>
 </body>

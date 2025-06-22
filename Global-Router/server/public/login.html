@@ -21,9 +21,33 @@
     </header>
 
     <main style="display: flex; justify-content: center;">
-        <h1 id="err" style="color: #ff8177;"></h1>
+        <script>
+            async function handleLogin(e) {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const passw = document.getElementById('passw').value;
+                const err = document.getElementById('err');
+                try {
+                    const res = await fetch('auth/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ email, passw })
+                    });
+                    if (res.ok) {
+                        window.location.href = '/';
+                    } else {
+                        err.textContent = res.json()['err'] || 'Login failed';
+                    }
+                } catch (error) {
+                    err.textContent = 'An error occurred';
+                }
+            }
+        </script>
+        <form id="login-form"> 
+            <h3 id="err" style="color: #ff8177;"></h3>
+        
+            <br>
 
-        <form action="/auth/login">
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required autocomplete="username">
@@ -38,31 +62,6 @@
             <br>
 
             <a href="sign-up">If you do not already have an acccount, click here to sign up</a>
-
-            <script>
-                document.querySelector('form').addEventListener('submit', async function(e) {
-                    e.preventDefault();
-                    const email = document.getElementById('email').value;
-                    const passw = document.getElementById('passw').value;
-                    const err = document.getElementById('err');
-                    try {
-                        const res = await fetch('auth/login', {
-                            method: 'POST',
-                            headers: {'Content-Type': 'application/json'},
-                            body: JSON.stringify({ email, passw })
-                        });
-                        if (res.ok) {
-                            // Redirect or show success
-                            window.location.href = '/';
-                        } else {
-                            // Handle error
-                            err.textContent = res.err;
-                        }
-                    } catch (err) {
-                        err.textContent = 'An error occurred';
-                    }
-                });
-            </script>
         </form>
     </main>
 
@@ -76,6 +75,13 @@
                     navLinks.classList.toggle('open');
                 });
             }
+            document.body.classList.add('loaded');
+
+            const loginForm = document.getElementById('login-form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', handleLogin);
+            }
+
             document.body.classList.add('loaded');
         });
     </script>
