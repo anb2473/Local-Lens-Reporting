@@ -8,3 +8,10 @@ services:
       - SECRET_KEY=ebd9197c201d1e315a5bea2858c7cc50e8a21ab4be7874212cbbd7b489cede95
     ports:
       - "3000:3000"
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /app
+        - action: rebuild
+          path: .

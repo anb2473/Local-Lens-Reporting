@@ -35,7 +35,11 @@ app.get('/contact', (req, res) => {    // Send a login page
 });
 
 app.get('/login', (req, res) => {
-        res.sendFile(path.join(__dirname, 'public', 'login.html'))
+    res.sendFile(path.join(__dirname, 'public', 'login.html'))
+})
+
+app.get('/sign-up', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'sign-up.html'))
 })
 
 app.use('/auth', auth.router);  // Use the auth routes
