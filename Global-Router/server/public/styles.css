@@ -433,9 +433,8 @@ img {
 }
 
 .form-group input[type="email"],
-.form-group input[type="passw"],
-.form-group input[type="fname"],
-.form-group input[type="lname"] {
+.form-group input[type="password"],
+.form-group input[type="text"] {
     padding: 10px 14px;
     border-radius: 8px;
     border: 1px solid #444;
@@ -470,13 +469,13 @@ button[type="submit"]:hover {
     box-shadow: 0 4px 16px rgba(255,129,119,0.15);
 }
 
-a {
+.a {
     color: #4fc3f7;
     text-decoration: none;
     transition: color 0.2s text-decoration 0.2s, transform 0.2s;
 }
 
-a:hover {
+.a:hover {
     color: #81d4fa;
     transform: translateY(-2px);
     text-decoration: underline;

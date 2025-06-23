@@ -36,7 +36,8 @@
                     if (res.ok) {
                         window.location.href = '/';
                     } else {
-                        err.textContent = res.body['err'] || 'Login failed';
+                        const errorData = await res.json();
+                        err.textContent = errorData.err || 'Login failed';
                     }
                 } catch (error) {
                     err.textContent = 'An error occurred';
@@ -54,14 +55,14 @@
             </div>
             <div class="form-group">
                 <label for="passw">Password:</label>
-                <input type="passw" id="passw" name="passw" required autocomplete="current-passw">
+                <input type="password" id="passw" name="passw" required autocomplete="current-passw">
             </div>
             <button type="submit">Login</button>
 
             <br>
             <br>
 
-            <a href="sign-up">If you do not already have an acccount, click here to sign up</a>
+            <a href="sign-up" class="a">If you do not already have an acccount, click here to sign up</a>
         </form>
     </main>
 
