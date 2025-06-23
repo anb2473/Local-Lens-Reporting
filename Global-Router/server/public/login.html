@@ -36,7 +36,7 @@
                     if (res.ok) {
                         window.location.href = '/';
                     } else {
-                        err.textContent = res.json()['err'] || 'Login failed';
+                        err.textContent = res.body['err'] || 'Login failed';
                     }
                 } catch (error) {
                     err.textContent = 'An error occurred';

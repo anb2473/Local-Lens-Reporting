@@ -21,6 +21,9 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@global-router-db:5432/global_router_db
     ports:
       - "3000:3000"
+    depends_on:
+      global-router-db-service:
+        condition: service_healthy
 
   # Global Router Database Service (Manages User Data)
   global-router-db-service:

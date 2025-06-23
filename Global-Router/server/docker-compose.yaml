@@ -8,6 +8,10 @@ services:
       - SECRET_KEY=ebd9197c201d1e315a5bea2858c7cc50e8a21ab4be7874212cbbd7b489cede95
     ports:
       - "3000:3000"
+    depends_on:
+      - global-router-db-service
+    volumes:
+      - .:/app
     develop:
       watch:
         - action: sync
@@ -15,3 +19,19 @@ services:
           target: /app
         - action: rebuild
           path: .
+
+  # Global Router Database Service (Manages User Data)
+  global-router-db-service:
+    image: postgres:13-alpine
+    container_name: global-router-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: global_router_db
+    ports:
+      - "4052:5432"
+    volumes:
+      - global-router-db-data:/var/lib/postgresql/data
+
+volumes:
+  global-router-db-data:

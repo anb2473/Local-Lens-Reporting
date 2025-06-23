@@ -42,7 +42,7 @@ app.get('/sign-up', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'sign-up.html'))
 })
 
-app.use('/auth', auth.router);  // Use the auth routes
+app.use('/auth', auth);  // Use the auth routes
 
 app.listen(PORT, () => {
     console.log(`Server active at http://127.0.0.1:${PORT}`);

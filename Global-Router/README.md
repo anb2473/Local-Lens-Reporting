@@ -1,6 +1,6 @@
 # Global Router
 
-**NOTE:** Before executing the system, first execute the command `cd path/to/Global-Router/local`, and then run the command `npm install` to update all packages
+**NOTE:** Before executing the system, first execute the command `cd path/to/Global-Router/local`, and then run the command `npm install`.
 
 ## Docker Compose (Recommended)
 
@@ -21,7 +21,9 @@ To set up and run the Global Router using Docker:
 2. **Build the Docker Image:**  
    Execute the command `docker build -t global-router .`  
    (**NOTE:** You can change the name of the Docker image, but you must use the same name in the run command.)
-3. **Run the Docker Image:**  
+3. **Build the Prisma Database:**
+   Execute the command `docker compose run global-router-server-service npx prisma migrate dev --name init`
+4. **Run the Docker Image:**  
    Execute the command `docker run -p 3000:3000 global-router`  
    (**NOTE:** Adjust the port if your app uses a different one.)
 
