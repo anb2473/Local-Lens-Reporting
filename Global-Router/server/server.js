@@ -30,8 +30,8 @@ app.get('/our-solution', (req, res) => {    // Send a login page
     res.sendFile(path.join(__dirname, 'public', 'our-solution.html'))
 });
 
-app.get('/contact', (req, res) => {    // Send a login page
-    res.sendFile(path.join(__dirname, 'public', 'contact.html'))
+app.get('/about', (req, res) => {    // Send a login page
+    res.sendFile(path.join(__dirname, 'public', 'about.html'))
 });
 
 app.get('/login', (req, res) => {

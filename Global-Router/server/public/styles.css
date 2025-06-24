@@ -12,6 +12,7 @@ body {
 
 body, main {
     padding-top: 80px; /* Adjust to match your header's height */
+    padding-bottom: 40px;
 }
 
 body.loaded {
@@ -434,7 +435,8 @@ img {
 
 .form-group input[type="email"],
 .form-group input[type="password"],
-.form-group input[type="text"] {
+.form-group input[type="text"],
+.form-group select {
     padding: 10px 14px;
     border-radius: 8px;
     border: 1px solid #444;

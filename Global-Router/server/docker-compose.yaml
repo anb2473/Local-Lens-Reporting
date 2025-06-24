@@ -6,6 +6,7 @@ services:
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@global-router-db:5432/global_router_db
       - SECRET_KEY=ebd9197c201d1e315a5bea2858c7cc50e8a21ab4be7874212cbbd7b489cede95
+      - NODE_ENV=production
     ports:
       - "3000:3000"
     depends_on:

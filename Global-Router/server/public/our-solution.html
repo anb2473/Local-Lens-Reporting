@@ -20,65 +20,67 @@
         </button>
     </header>
 
-    <div class="banner">
-        <div class="falling-text">
-            <h1 class="major-text">News Desserts</h1>
-            <p style="color: white;">
-                Have become an increasingly prevolent issue across the United States and the globe.
-                According to Medill, 55 million Americans are currently living in regions with limited
-                local news coverage.
+    <main>
+        <div class="banner">
+            <div class="falling-text">
+                <h1 class="major-text">News Desserts</h1>
+                <p style="color: white;">
+                    Have become an increasingly prevolent issue across the United States and the globe.
+                    According to Medill, 55 million Americans are currently living in regions with limited
+                    local news coverage.
+                </p>
+            </div>
+            <img src="images/news-deserts.png" alt="" style="margin-top: 50px;">
+        </div>
+
+        <div class="banner">
+            <img src="images/networking.png" alt="" style="margin-top: 50px; margin-right: 30px;">
+            <div class="falling-text">
+                <h1 class="major-text">The Solution,</h1>
+                <p style="color: white;">
+                    By creating a platform to connect local journalists with the community, we can 
+                    help fill the local news gap by providing journalists credible sources they can use to 
+                    optimize local coverage.
+                </p>
+            </div>
+        </div>
+
+        <div class="talking-points-section">
+            <div class="talking-point-card">
+                <h2>AI Validity Checks</h2>
+                <p>We use AI to check the validity of posts, ensuring that information shared is credible and trustworthy.</p>
+            </div>
+            <div class="talking-point-card">
+                <h2>Source Citation & Mentions</h2>
+                <p>We provide options to cite sources by mentioning people in your stories and including image and video material. Whenever a person is mentioned, the system will automatically notify them and allow them to validate the claim.</p>
+            </div>
+            <div class="talking-point-card">
+                <h2>Downloadable Formats</h2>
+                <p>We allow users to download stories in multiple data formats including JSON, CSV, Markdown, and raw text files.</p>
+            </div>
+        </div>
+
+        <section class="tech-stack-section">
+            <h2>Our Tech Stack: How It Works</h2>
+            <p>
+                We use <strong>PyTorch</strong> alongside <strong>FastAPI</strong> to run an efficient AI server capable of analyzing claims. Our main global router is built with <strong>Node.js</strong> and <strong>Express</strong>, which routes users to the appropriate server distribution for their region.<br><br>
+                Specifically, each covered region has a dedicated <strong>Docker volume</strong> and <strong>SQL server</strong>. When a user connects, the global router checks if a volume exists for their region. If it does, it then checks if a server is active for that region. If not, it pulls up an idle server from our inactive server base and uses <strong>Kubernetes</strong> to integrate it with the database, efficiently managing resources and ensuring seamless scalability.
             </p>
-        </div>
-        <img src="images/news-deserts.png" alt="" style="margin-top: 50px;">
-    </div>
+        </section>
 
-    <div class="banner">
-        <img src="images/networking.png" alt="" style="margin-top: 50px; margin-right: 30px;">
-        <div class="falling-text">
-            <h1 class="major-text">The Solution,</h1>
-            <p style="color: white;">
-                By creating a platform to connect local journalists with the community, we can 
-                help fill the local news gap by providing journalists credible sources they can use to 
-                optimize local coverage.
-            </p>
-        </div>
-    </div>
-
-    <div class="talking-points-section">
-        <div class="talking-point-card">
-            <h2>AI Validity Checks</h2>
-            <p>We use AI to check the validity of posts, ensuring that information shared is credible and trustworthy.</p>
-        </div>
-        <div class="talking-point-card">
-            <h2>Source Citation & Mentions</h2>
-            <p>We provide options to cite sources by mentioning people in your stories and including image and video material. Whenever a person is mentioned, the system will automatically notify them and allow them to validate the claim.</p>
-        </div>
-        <div class="talking-point-card">
-            <h2>Downloadable Formats</h2>
-            <p>We allow users to download stories in multiple data formats including JSON, CSV, Markdown, and raw text files.</p>
-        </div>
-    </div>
-
-    <section class="tech-stack-section">
-        <h2>Our Tech Stack: How It Works</h2>
-        <p>
-            We use <strong>PyTorch</strong> alongside <strong>FastAPI</strong> to run an efficient AI server capable of analyzing claims. Our main global router is built with <strong>Node.js</strong> and <strong>Express</strong>, which routes users to the appropriate server distribution for their region.<br><br>
-            Specifically, each covered region has a dedicated <strong>Docker volume</strong> and <strong>SQL server</strong>. When a user connects, the global router checks if a volume exists for their region. If it does, it then checks if a server is active for that region. If not, it pulls up an idle server from our inactive server base and uses <strong>Kubernetes</strong> to integrate it with the database, efficiently managing resources and ensuring seamless scalability.
-        </p>
-    </section>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const menuBtn = document.querySelector('.header .menu-btn');
-            const navLinks = document.querySelector('.header .nav-links');
-            if (menuBtn && navLinks) {
-                menuBtn.addEventListener('click', function() {
-                    menuBtn.classList.toggle('open');
-                    navLinks.classList.toggle('open');
-                });
-            }
-            document.body.classList.add('loaded');
-        });
-    </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const menuBtn = document.querySelector('.header .menu-btn');
+                const navLinks = document.querySelector('.header .nav-links');
+                if (menuBtn && navLinks) {
+                    menuBtn.addEventListener('click', function() {
+                        menuBtn.classList.toggle('open');
+                        navLinks.classList.toggle('open');
+                    });
+                }
+                document.body.classList.add('loaded');
+            });
+        </script>
+    </main>
 </body>
 </html>
