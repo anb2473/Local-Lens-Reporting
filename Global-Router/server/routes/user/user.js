@@ -7,9 +7,8 @@ const router = express.Router();
 
 // Locate directory of resources
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(dirname(__filename));
+const __dirname = path.join(__filename, '..', '..', '..');
 
-// LOGIN
 router.get('/search', async (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'search.html'));
 });

@@ -509,6 +509,8 @@ button[type="submit"]:hover {
 
 .search-bar button img {
     width: 25px;
+    height: 25px;
+    object-fit: contain;
 }
 
 .search-bar button {
@@ -516,6 +518,14 @@ button[type="submit"]:hover {
     border-radius: 50%;
     width: 60px;
     height: 60px;
-    background: #58629b;
+    background: rgba(88, 98, 155, 0.7);
     cursor: pointer;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-bar button:hover {
+    background: rgba(88, 98, 155, 0.9);
 }
