@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Local Lens</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1 class="logo">Local Lens</h1>
+        <nav class="nav-links">
+            <a href="/">Home</a>
+            <a href="our-solution">Our Solution</a>
+            <a href="about">About Me</a>
+        </nav>
+        <button class="menu-btn" aria-label="Open navigation">
+            <span class="bar bar1"></span>
+            <span class="bar bar2"></span>
+            <span class="bar bar3"></span>
+        </button>
+    </header>
+
+    <main>
+        <form action="" class="search-bar">
+            <input type="text" placeholder="search your region" name="q">
+            <button type="submit"><img src="public/images/search.png" alt=""></button>
+        </form>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuBtn = document.querySelector('.header .menu-btn');
+            const navLinks = document.querySelector('.header .nav-links');
+            if (menuBtn && navLinks) {
+                menuBtn.addEventListener('click', function() {
+                    menuBtn.classList.toggle('open');
+                    navLinks.classList.toggle('open');
+                });
+            }
+            document.body.classList.add('loaded');
+        });
+    </script>
+</body>
+</html>

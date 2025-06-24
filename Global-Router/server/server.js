@@ -5,6 +5,8 @@ import cookieParser from 'cookie-parser';
 import {fileURLToPath} from 'url';
 import path, {dirname} from 'path';
 import auth from './routes/auth/auth.js';
+import user from './routes/user/user.js';
+import authMiddleware from './middleware/authMiddleware.js';
 
 const app = express();
 
@@ -42,7 +44,8 @@ app.get('/sign-up', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'sign-up.html'))
 })
 
-app.use('/auth', auth);  // Use the auth routes
+app.use('/auth', auth);                  // Use the auth routes
+app.use('/user', authMiddleware, user)   // Link the auth middleware for requests to the user endpoints
 
 app.listen(PORT, () => {
     console.log(`Server active at http://127.0.0.1:${PORT}`);

@@ -34,7 +34,7 @@
                     body: JSON.stringify({ email, passw })
                     });
                     if (res.ok) {
-                        window.location.href = '/';
+                        window.location.href = '/user/search';
                     } else {
                         const errorData = await res.json();
                         err.textContent = errorData.err || 'Login failed';
