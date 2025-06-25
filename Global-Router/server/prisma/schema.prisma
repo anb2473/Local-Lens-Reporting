@@ -20,6 +20,33 @@ model User {
   lname     String
   email     String    @unique
   passw     String
-  loc       String
+  region    Region    @relation(fields: [regionId], references: [id])
+  regionId  Int
   active    Boolean   @default(true)
+}
+
+model News {
+  id        Int       @id @default(autoincrement())
+  title     String
+  content   String
+  region    Region    @relation(fields: [regionId], references: [id])
+  regionId  Int
+}
+
+model Region {
+  id        Int       @id @default(autoincrement())
+  name      String
+  users     User[]
+  news      News[]
+}
+
+model IpLog {
+  id          Int      @id @default(autoincrement())
+  ip          String   @unique
+  requestCount Int      @default(0)
+  lastUsed    DateTime @default(now())
+  banned      Boolean  @default(false)
+  banReason   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

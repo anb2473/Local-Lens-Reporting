@@ -39,7 +39,7 @@
             <div class="form-group">
                 <label for="loc">Region:</label>
                 <select name="loc" id="loc">
-                    <option value="washington-dc">Washington DC</option>
+                    <option value="Washington DC">Washington DC</option>
                 </select>
                 <p style="color: white;">If your region is not listed, please feel free to reach out</p>
             </div>
@@ -71,7 +71,7 @@
                     body: JSON.stringify({ fname, lname, email, passw, loc })
                 });
                 if (res.ok) {
-                    window.location.href = '/auth/login';
+                    window.location.href = '/login';
                 } else {
                     const data = await res.json();
                     err.textContent = data.err || 'Sign up failed';

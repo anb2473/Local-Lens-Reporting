@@ -484,13 +484,14 @@ button[type="submit"]:hover {
 }
 
 .search-bar {
-    width: 100%;
+    width: 80%;
     max-width: 700px;
     background: rgba(255, 255, 255, 0.2);
     display: flex;
     align-items: center;
     border-radius: 60px;
     padding: 10px 20px;
+    transition: all 0.2s;
 }
 
 .search-bar input {
@@ -501,6 +502,12 @@ button[type="submit"]:hover {
     padding: 24px 20px;
     font-size: 20px;
     color: #cac7ff;
+}
+
+.search-bar:focus-within {
+    width: 85%;
+    max-width: 800px;
+    padding: 15px 25px;
 }
 
 ::placeholder {

@@ -47,6 +47,32 @@ router.post('/login', async (req, res) => {
 router.post('/sign-up', async (req, res) => {
     const { email, passw, fname, lname, loc } = req.body;
 
+    let region = await prisma.region.findFirst({ where: { name: loc } });
+    if (!region) {
+        // Create region with name and get its ID
+        region = await prisma.region.create({
+            data: { name: loc }
+        });
+        
+        // Ban IP if creating regions too frequently
+        const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+        const ipLog = await prisma.ipLog.findFirst({
+            where: { ip }
+        });
+
+        if (ipLog && ipLog.requestCount > 10) {
+            await prisma.ipLog.update({
+                where: { ip },
+                data: {
+                    banned: true,
+                    banReason: 'Creating too many regions'
+                }
+            });
+        }
+    }
+
+    let region_id = region.id;
+
     const existing = await prisma.user.findFirst({ where: { email } });
     if (existing) {
         return res.status(400).json({ err: 'User already exists' });
@@ -61,7 +87,7 @@ router.post('/sign-up', async (req, res) => {
                 passw: passw_hash,
                 fname,
                 lname,
-                loc
+                regionId: region_id
             }
         });
 
