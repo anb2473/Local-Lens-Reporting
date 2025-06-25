@@ -15,7 +15,7 @@ export const trackIp = async (req, res, next) => {
 
     if (existingIp && existingIp.banned) {
         return res.status(403).json({
-            error: 'Your IP has been banned from creating accounts.'
+            error: existingIp.banReason
         });
     }
 

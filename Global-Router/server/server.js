@@ -8,6 +8,7 @@ import auth from './routes/auth/auth.js';
 import user from './routes/user/user.js';
 import authMiddleware from './middleware/authMiddleware.js';
 import rateLimit from 'express-rate-limit';
+import ejs from 'ejs';
 
 const app = express();
 
@@ -19,6 +20,9 @@ const PORT = process.env.PORT || 3000;
 // Locate directory of resources
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.json());
 app.use(cookieParser());

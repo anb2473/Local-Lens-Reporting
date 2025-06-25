@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Local Lens</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1 class="logo">Local Lens</h1>
+        <nav class="nav-links">
+            <a href="/">Home</a>
+            <a href="our-solution">Our Solution</a>
+            <a href="about">About Me</a>
+        </nav>
+        <button class="menu-btn" aria-label="Open navigation">
+            <span class="bar bar1"></span>
+            <span class="bar bar2"></span>
+            <span class="bar bar3"></span>
+        </button>
+    </header>
+
+    <main>
+        <form action="/search" method="get" class="search-bar">
+            <input type="text" name="q" placeholder="search your region" value="<%= query || '' %>">
+            <button type="submit"><img src="../images/search.png" alt=""></button>
+        </form>
+
+        <% if (query) { %>
+            <div class="no-results">
+                No results found for "<%= query %>".
+            </div>
+        <% } %>
+    </main>
+</body>
+</html>

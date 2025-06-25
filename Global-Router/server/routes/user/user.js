@@ -10,10 +10,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.join(__filename, '..', '..', '..');
 
 router.get('/search', async (req, res) => {
-    if (req.query.q) {
-        // const search = await 
-    }
-    res.sendFile(path.join(__dirname, 'public', 'search.html'));
+    const query = req.query.q || '';
+    res.render('search', { query: query });
 });
 
 export default router;
