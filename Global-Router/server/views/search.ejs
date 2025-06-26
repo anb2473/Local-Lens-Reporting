@@ -32,5 +32,19 @@
             </div>
         <% } %>
     </main>
+
+    <script>
+         document.addEventListener('DOMContentLoaded', function() {
+            const menuBtn = document.querySelector('.header .menu-btn');
+            const navLinks = document.querySelector('.header .nav-links');
+            if (menuBtn && navLinks) {
+                menuBtn.addEventListener('click', function() {
+                    menuBtn.classList.toggle('open');
+                    navLinks.classList.toggle('open');
+                });
+            }
+            document.body.classList.add('loaded');
+        });
+    </script>
 </body>
 </html>
