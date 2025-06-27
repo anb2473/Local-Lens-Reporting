@@ -11,7 +11,19 @@ const __dirname = path.join(__filename, '..', '..', '..');
 
 router.get('/search', async (req, res) => {
     const query = req.query.q || '';
-    res.render('search', { query: query });
+    try {
+        const region = await prisma.region.findFirst({
+            where: { name: query },
+        });
+        res.render('search', { query: query, region: region, regions: await prisma.region.findMany({
+            select: {
+                name: true,
+            },
+        }) });
+    } catch (error) {
+        console.error('Error fetching region:', error);
+        res.render('search', { query: query, error: 'Error fetching region data' });
+    }
 });
 
 export default router;

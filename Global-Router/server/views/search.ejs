@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
+    <div class="overlay"></div>
     <header class="header">
         <h1 class="logo">Local Lens</h1>
         <nav class="nav-links">
@@ -20,21 +21,62 @@
         </button>
     </header>
 
-    <main>
-        <form action="/search" method="get" class="search-bar">
-            <input type="text" name="q" placeholder="search your region" value="<%= query || '' %>">
-            <button type="submit"><img src="../images/search.png" alt=""></button>
-        </form>
+    <main style="display: flex; flex-direction: column;">
+        <div style="justify-content: center; display: flex;">
+            <form action="search" method="get" class="search-bar">
+                <div class="autocomplete-container">
+                    <input type="text" name="q" placeholder="search your region" value="<%= query || '' %>" autocomplete="off">
+                    <div class="autocomplete-results" id="autocompleteResults">
+                        <% regions.filter(region => region.name.toLowerCase().includes(query.toLowerCase())).forEach(region => { %>
+                            <div class="autocomplete-item" data-region="<%= region.name %>">
+                                <%= region.name %>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+                <button type="submit"><img src="../images/search.png" alt=""></button>
+            </form>
+        </div>
 
-        <% if (query) { %>
-            <div class="no-results">
-                No results found for "<%= query %>".
-            </div>
+        </div>
+
+        <div style="justify-content: center; display: flex; padding-top: 75px;">
+            <% if (query) { %>
+                <% if (region) { %>
+                    <div class="falling-text-large">
+                        <h1 class="major-text">Welcome</h1>
+                        <h2 class="minor-text">to <%= query %></h2>
+                    </div>
+                <% } else { %>
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <h2 style="color: white;">Sorry, "<%= query %>" is not covered yet!</h2>
+                        <img src="../images/not-found.jpg" alt="" style="width: 50%; margin-top: 25px; border-radius: 25px; border: 0; object-fit: contain;">
+                    </div>
+                <% } %>
+            <% } %>
+        </div>
+
+        <% if (region && region.news) { %>
+            <% if (region.news.length > 0) { %>
+                <div class="news-list">
+                    <% region.news.forEach(news => { %>
+                        <div class="news-card">
+                            <h3><%= news.title %></h3>
+                            <p><%= news.content.substring(0, 100) %></p>
+                            <div class="date"><%= new Date(news.createdAt).toLocaleDateString() %></div>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } else { %>
+                <div class="no-results">
+                    No news found for this region.
+                </div>
+            <% } %>
         <% } %>
     </main>
 
     <script>
-         document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() {
             const menuBtn = document.querySelector('.header .menu-btn');
             const navLinks = document.querySelector('.header .nav-links');
             if (menuBtn && navLinks) {
@@ -43,6 +85,49 @@
                     navLinks.classList.toggle('open');
                 });
             }
+            
+            const searchInput = document.querySelector('.autocomplete-input');
+            const resultsContainer = document.getElementById('autocompleteResults');
+            
+            if (searchInput && resultsContainer) {
+                searchInput.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    const items = resultsContainer.querySelectorAll('.autocomplete-item');
+                    
+                    items.forEach(item => {
+                        const region = item.getAttribute('data-region');
+                        const isVisible = region.toLowerCase().includes(searchTerm);
+                        item.style.display = isVisible ? 'block' : 'none';
+                        
+                        if (isVisible && searchTerm === region.toLowerCase()) {
+                            item.classList.add('selected');
+                        } else {
+                            item.classList.remove('selected');
+                        }
+                    });
+                    
+                    // Show results if there's input
+                    resultsContainer.classList.toggle('open', searchTerm.length > 0);
+                });
+                
+                // Handle clicking on a region
+                resultsContainer.addEventListener('click', function(e) {
+                    const item = e.target.closest('.autocomplete-item');
+                    if (item) {
+                        searchInput.value = item.getAttribute('data-region');
+                        // Submit the form
+                        searchInput.closest('form').submit();
+                    }
+                });
+                
+                // Close when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!searchInput.contains(e.target) && !resultsContainer.contains(e.target)) {
+                        resultsContainer.classList.remove('open');
+                    }
+                });
+            }
+            
             document.body.classList.add('loaded');
         });
     </script>
