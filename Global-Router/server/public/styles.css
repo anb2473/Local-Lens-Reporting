@@ -461,7 +461,7 @@ img {
     background: #23272f;
 }
 
-button[type="submit"] {
+.submit-btn {
     background: linear-gradient(90deg, #ff8177 0%, #ff867a 50%, #ff8c7f 100%);
     color: #fff;
     border: none;
@@ -474,7 +474,7 @@ button[type="submit"] {
     box-shadow: 0 2px 8px rgba(255,129,119,0.08);
 }
 
-button[type="submit"]:hover {
+.submit-btn:hover {
     background: linear-gradient(90deg, #ff8c7f 0%, #ff867a 100%);
     box-shadow: 0 4px 16px rgba(255,129,119,0.15);
 }
@@ -489,6 +489,11 @@ button[type="submit"]:hover {
     color: #81d4fa;
     transform: translateY(-2px);
     text-decoration: underline;
+}
+
+.search-bar-container {
+    justify-content: center; 
+    display: flex;
 }
 
 .search-bar {
@@ -621,4 +626,40 @@ button[type="submit"]:hover {
 
 .autocomplete-item {
     pointer-events: auto;
+}
+
+.post-btn {
+    background: linear-gradient(135deg, #ff8177 0%, #ffb199 100%);
+    box-shadow: 0 4px 12px rgba(255, 129, 119, 0.18), 0 2px 12px rgba(0, 0, 0, 0.22);
+    transition: all 0.3s ease;
+    border-radius: 25px;
+    color: white;
+    padding: 0 40px;
+    margin-left: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.post-btn:hover {
+    background: linear-gradient(135deg, #ff867a 0%, #ff9c8f 100%);
+    box-shadow: 0 8px 32px rgba(255, 129, 119, 0.18), 0 2px 12px rgba(0, 0, 0, 0.22);
+}
+
+@media (max-width: 768px) {
+    .search-bar-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .search-bar {
+        margin-bottom: 25px;
+    }
+    .post-btn {
+        margin-left: 0;
+        height: 90px;
+        max-width: 300px;
+        width: 100%;
+    }
 }

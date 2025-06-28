@@ -22,7 +22,7 @@
     </header>
 
     <main style="display: flex; flex-direction: column;">
-        <div style="justify-content: center; display: flex;">
+        <div class="search-bar-container">
             <form action="search" method="get" class="search-bar">
                 <div class="autocomplete-container">
                     <input type="text" name="q" placeholder="search your region" value="<%= query || '' %>" autocomplete="off" id="autocompleteInput">
@@ -54,6 +54,7 @@
                 </div>
                 <button type="submit"><img src="../images/search.png" alt=""></button>
             </form>
+            <a href="post" class="post-btn">Post</a>
         </div>
 
         <div style="justify-content: center; display: flex; padding-top: 75px;">
