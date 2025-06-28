@@ -25,19 +25,35 @@
         <div style="justify-content: center; display: flex;">
             <form action="search" method="get" class="search-bar">
                 <div class="autocomplete-container">
-                    <input type="text" name="q" placeholder="search your region" value="<%= query || '' %>" autocomplete="off">
+                    <input type="text" name="q" placeholder="search your region" value="<%= query || '' %>" autocomplete="off" id="autocompleteInput">
                     <div class="autocomplete-results" id="autocompleteResults">
-                        <% regions.filter(region => region.name.toLowerCase().includes(query.toLowerCase())).forEach(region => { %>
-                            <div class="autocomplete-item" data-region="<%= region.name %>">
+                        <% regions.forEach(region => { %>
+                            <div class="autocomplete-item" data-region="<%= region.name %>" style="display: none;">
                                 <%= region.name %>
                             </div>
                         <% }) %>
+
+                        <script>
+                            const searchInput = document.getElementById('autocompleteInput');
+                            const autocompleteItems = document.querySelectorAll('.autocomplete-item');
+
+                            function checkAutocompleteItems() {
+                                autocompleteItems.forEach(item => {
+                                    console.log(searchInput.value, item.textContent, item.textContent.toLowerCase().includes(searchInput.value.toLowerCase()));
+                                    if (item.textContent.toLowerCase().includes(searchInput.value.toLowerCase())) {
+                                        item.style.display = 'block';
+                                    } else {
+                                        item.style.display = 'none';
+                                    }
+                                });
+                            }
+
+                            searchInput.addEventListener('input', checkAutocompleteItems);
+                        </script>
                     </div>
                 </div>
                 <button type="submit"><img src="../images/search.png" alt=""></button>
             </form>
-        </div>
-
         </div>
 
         <div style="justify-content: center; display: flex; padding-top: 75px;">
@@ -86,15 +102,19 @@
                 });
             }
             
-            const searchInput = document.querySelector('.autocomplete-input');
+            const searchInput = document.getElementById('autocompleteInput');
             const resultsContainer = document.getElementById('autocompleteResults');
+            const autocompleteItems = document.querySelectorAll('.autocomplete-item');
             
             if (searchInput && resultsContainer) {
                 searchInput.addEventListener('input', function() {
                     const searchTerm = this.value.toLowerCase();
-                    const items = resultsContainer.querySelectorAll('.autocomplete-item');
                     
-                    items.forEach(item => {
+                    // Show results container if there's input
+                    resultsContainer.classList.toggle('open', searchTerm.length > 0);
+                    
+                    // Filter and show/hide items
+                    autocompleteItems.forEach(item => {
                         const region = item.getAttribute('data-region');
                         const isVisible = region.toLowerCase().includes(searchTerm);
                         item.style.display = isVisible ? 'block' : 'none';
@@ -105,9 +125,6 @@
                             item.classList.remove('selected');
                         }
                     });
-                    
-                    // Show results if there's input
-                    resultsContainer.classList.toggle('open', searchTerm.length > 0);
                 });
                 
                 // Handle clicking on a region

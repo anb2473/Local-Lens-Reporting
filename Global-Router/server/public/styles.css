@@ -576,11 +576,10 @@ button[type="submit"]:hover {
     font-size: 0.875rem;
 }
 
-
 .autocomplete-container {
     position: relative;
     width: 100%;
-    perspective: 1000px;
+    z-index: 1000;
 }
 
 .autocomplete-results {
@@ -588,7 +587,7 @@ button[type="submit"]:hover {
     position: absolute;
     background: #23272f;
     border-radius: 4px;
-    z-index: 1000;
+    z-index: 1001;
     max-height: 200px;
     overflow-y: auto;
     width: 100%;
@@ -597,6 +596,7 @@ button[type="submit"]:hover {
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     transform: translateY(-10px) scale(0.95);
     opacity: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .autocomplete-results.open {
@@ -612,63 +612,13 @@ button[type="submit"]:hover {
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    display: block;
 }
 
-.autocomplete-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.1),
-        transparent
-    );
-    transition: 0.5s;
+.autocomplete-results {
+    pointer-events: auto;
 }
 
-.autocomplete-item:hover {
-    background-color: #444;
-    transform: translateX(5px);
-}
-
-.autocomplete-item:hover::before {
-    left: 100%;
-}
-
-.autocomplete-item.selected {
-    background: #58629b;
-    color: white;
-    font-weight: 500;
-}
-
-.autocomplete-item:hover::after {
-    content: '→';
-    position: absolute;
-    right: 10px;
-    color: #58629b;
-    transition: all 0.2s;
-}
-
-.autocomplete-item:not(:last-child) {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Add a subtle gradient background */
-.autocomplete-results::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-        135deg,
-        rgba(88, 98, 155, 0.1) 0%,
-        rgba(88, 98, 155, 0.2) 100%
-    );
-    pointer-events: none;
+.autocomplete-item {
+    pointer-events: auto;
 }
