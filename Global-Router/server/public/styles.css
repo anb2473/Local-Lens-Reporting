@@ -523,7 +523,6 @@ img {
     padding: 2px;
     border-radius: 60px;
     background-color: #333333;
-    overflow: hidden;
     box-sizing: border-box;
     background-origin: content-box;
     background-clip: content-box;
