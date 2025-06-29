@@ -23,6 +23,7 @@ model User {
   region    Region    @relation(fields: [regionId], references: [id])
   regionId  Int
   active    Boolean   @default(true)
+  news      News[]
 }
 
 model News {
@@ -31,6 +32,8 @@ model News {
   content   String
   region    Region    @relation(fields: [regionId], references: [id])
   regionId  Int
+  user      User      @relation(fields: [userId], references: [id])
+  userId    Int
 }
 
 model Region {

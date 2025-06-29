@@ -14,15 +14,59 @@ router.get('/search', async (req, res) => {
     try {
         const region = await prisma.region.findFirst({
             where: { name: query },
+            include: {
+                news: true
+            }
         });
-        res.render('search', { query: query, region: region, regions: await prisma.region.findMany({
+        
+        const regions = await prisma.region.findMany({
             select: {
-                name: true,
-            },
-        }) });
+                name: true
+            }
+        });
+
+        res.render('search', { 
+            query: query, 
+            region: region, 
+            regions: regions,
+            news: region?.news || []
+        });
     } catch (error) {
         console.error('Error fetching region:', error);
-        res.render('search', { query: query, error: 'Error fetching region data' });
+        res.render('search', { 
+            query: query, 
+            error: 'Error fetching region data',
+            regions: await prisma.region.findMany({
+                select: {
+                    name: true,
+                },
+            })
+        });
+    }
+});
+
+router.get('/post', async (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'post.html'));
+    return;
+});
+
+router.post('/post', async (req, res) => {
+    const { title, content } = req.body;
+    const user = await prisma.user.findFirst({ where: { id: req.userID } });
+    const region = await prisma.region.findFirst({ where: { id: user.regionId } });
+    try {
+        const post = await prisma.news.create({
+            data: {
+                title: title,
+                content: content,
+                region: { connect: { id: user.regionId } },
+                user: { connect: { id: req.userID } }
+            },
+        });
+        res.redirect(`/user/search?q=${region.name}`);
+    } catch (error) {
+        console.error('Error creating post:', error);
+        res.status(500).send('Error creating post');
     }
 });
 

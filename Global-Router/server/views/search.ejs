@@ -78,9 +78,12 @@
                 <div class="news-list">
                     <% region.news.forEach(news => { %>
                         <div class="news-card">
-                            <h3><%= news.title %></h3>
-                            <p><%= news.content.substring(0, 100) %></p>
-                            <div class="date"><%= new Date(news.createdAt).toLocaleDateString() %></div>
+                            <div class="bloom"></div>
+                            <div class="news-card-content">
+                                <h3><%= news.title.length > 25 ? news.title.substring(0, 22) + "..." : news.title.substring(0, 25) %></h3>
+                                <p><%= news.content.length > 80 ? news.content.substring(0, 77) + "..." : news.content.substring(0, 80) %></p>
+                                <div class="date"><%= new Date(news.createdAt).toLocaleDateString() %></div>
+                            </div>
                         </div>
                     <% }); %>
                 </div>
@@ -102,24 +105,24 @@
                     navLinks.classList.toggle('open');
                 });
             }
-            
+
             const searchInput = document.getElementById('autocompleteInput');
             const resultsContainer = document.getElementById('autocompleteResults');
             const autocompleteItems = document.querySelectorAll('.autocomplete-item');
-            
+
             if (searchInput && resultsContainer) {
                 searchInput.addEventListener('input', function() {
                     const searchTerm = this.value.toLowerCase();
-                    
+
                     // Show results container if there's input
                     resultsContainer.classList.toggle('open', searchTerm.length > 0);
-                    
+
                     // Filter and show/hide items
                     autocompleteItems.forEach(item => {
                         const region = item.getAttribute('data-region');
                         const isVisible = region.toLowerCase().includes(searchTerm);
                         item.style.display = isVisible ? 'block' : 'none';
-                        
+
                         if (isVisible && searchTerm === region.toLowerCase()) {
                             item.classList.add('selected');
                         } else {
@@ -127,7 +130,7 @@
                         }
                     });
                 });
-                
+
                 // Handle clicking on a region
                 resultsContainer.addEventListener('click', function(e) {
                     const item = e.target.closest('.autocomplete-item');
@@ -137,7 +140,7 @@
                         searchInput.closest('form').submit();
                     }
                 });
-                
+
                 // Close when clicking outside
                 document.addEventListener('click', function(e) {
                     if (!searchInput.contains(e.target) && !resultsContainer.contains(e.target)) {
@@ -145,7 +148,20 @@
                     }
                 });
             }
-            
+
+            // Initialize bloom effect for all news cards
+            const newsCards = document.querySelectorAll('.news-card');
+            newsCards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = (e.clientX - rect.left) / rect.width * 100;
+                    const y = (e.clientY - rect.top) / rect.height * 100;
+                    
+                    card.style.setProperty('--mouse-x', `${x}%`);
+                    card.style.setProperty('--mouse-y', `${y}%`);
+                });
+            });
+
             document.body.classList.add('loaded');
         });
     </script>

@@ -11,10 +11,9 @@ function authMiddleware(req, res, next) {
         if (err) {
             return res.status(401).json({message: 'Unauthorized'});
         }
-        req.userID = decoded.id; // Set user id to request object
+        req.userID = decoded.userId; // Set user id to request object
         next(); // Call next middleware or route handler
     })
-
 }
 
 export default authMiddleware;

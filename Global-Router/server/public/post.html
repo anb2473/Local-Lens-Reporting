@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Local Lens</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1 class="logo">Local Lens</h1>
+        <nav class="nav-links">
+            <a href="/">Home</a>
+            <a href="our-solution">Our Solution</a>
+            <a href="about">About Me</a>
+        </nav>
+        <button class="menu-btn" aria-label="Open navigation">
+            <span class="bar bar1"></span>
+            <span class="bar bar2"></span>
+            <span class="bar bar3"></span>
+        </button>
+    </header>
+
+    <main style="display: flex; justify-content: center;">
+        <form id="sign-up-form">
+            <h3 id="err" style="color: #ff8177;"></h3>
+            <br>
+            <div class="form-group">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" required autocomplete="given-name">
+            </div>
+            <div class="form-group">
+                <label for="content">Content:</label>
+                <input type="text" id="content" name="content" required autocomplete="family-name">
+            </div>
+            <button type="submit" class="submit-btn">Post</button>
+        </form>
+    </main>
+
+    <script>
+        async function handlePost(e) {
+            e.preventDefault();
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+
+            const err = document.getElementById('err');
+            try {
+                const res = await fetch('/user/post', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ title, content })
+                });
+                if (res.ok) {
+                    window.location.href = '/user/search';
+                } else {
+                    const data = await res.json();
+                    err.textContent = data.err || 'Post failed';
+                }
+            } catch (error) {
+                err.textContent = 'An error occurred';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuBtn = document.querySelector('.header .menu-btn');
+            const navLinks = document.querySelector('.header .nav-links');
+            if (menuBtn && navLinks) {
+                menuBtn.addEventListener('click', function() {
+                    menuBtn.classList.toggle('open');
+                    navLinks.classList.toggle('open');
+                });
+            }
+            document.body.classList.add('loaded');
+
+            const signUpForm = document.getElementById('sign-up-form');
+            if (signUpForm) {
+                signUpForm.addEventListener('submit', handlePost);
+            }
+        });
+    </script>
+</body>
+</html>
