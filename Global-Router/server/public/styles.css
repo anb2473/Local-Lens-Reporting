@@ -541,6 +541,22 @@ img {
     animation: 10s rotate linear infinite;
 }
 
+.search-bar::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%; 
+    height: 100%;
+    border-radius: inherit;
+    background: conic-gradient(from var(--angle), #ff867a 0%, #ffcc66 25%, #7afaff 75%, #ff867a 100%);
+    transform: translate(-50%, -50%);
+    z-index: -2;
+    filter: blur(1rem);
+    opacity: 0.7;
+    animation: 10s rotate linear infinite;
+}
+
 .search-bar input {
     background: transparent;
     flex: 1;
