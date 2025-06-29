@@ -499,12 +499,47 @@ img {
 .search-bar {
     width: 80%;
     max-width: 700px;
-    background: rgba(255, 255, 255, 0.2);
     display: flex;
     align-items: center;
     border-radius: 60px;
     padding: 10px 20px;
     transition: all 0.2s;
+}
+
+@property --angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
+@keyframes rotate {
+    to {
+        --angle: 360deg;
+    }
+}
+
+.search-bar {
+    position: relative;
+    padding: 2px;
+    border-radius: 60px;
+    background-color: #333333;
+    overflow: hidden;
+    box-sizing: border-box;
+    background-origin: content-box;
+    background-clip: content-box;
+}
+
+.search-bar::after {
+    z-index: -1;
+    content: "";
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    background: conic-gradient(from var(--angle), #ff867a 0%, #ffcc66 25%, #7afaff 75%, #ff867a 100%);
+    border-radius: inherit;
+    animation: 10s rotate linear infinite;
 }
 
 .search-bar input {
@@ -520,7 +555,6 @@ img {
 .search-bar:focus-within {
     width: 85%;
     max-width: 800px;
-    padding: 15px 25px;
 }
 
 ::placeholder {
@@ -536,7 +570,7 @@ img {
 .search-bar button {
     border: 0;
     border-radius: 50%;
-    width: 60px;
+    width: 70px;
     height: 60px;
     background: rgba(88, 98, 155, 0.7);
     cursor: pointer;
@@ -544,6 +578,7 @@ img {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-right: 8px;
 }
 
 .search-bar button:hover {
