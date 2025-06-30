@@ -77,11 +77,11 @@
             <% if (region.news.length > 0) { %>
                 <div class="news-list">
                     <% region.news.forEach(news => { %>
-                        <div class="news-card">
+                        <div class="news-card" data-title="<%= news.title %>" data-content="<%= news.content %>">
                             <div class="bloom"></div>
                             <div class="news-card-content">
-                                <h3><%= news.title.length > 25 ? news.title.substring(0, 22) + "..." : news.title.substring(0, 25) %></h3>
-                                <p><%= news.content.length > 80 ? news.content.substring(0, 77) + "..." : news.content.substring(0, 80) %></p>
+                                <h3 class="dynamic-title"><%= news.title %></h3>
+                                <p class="dynamic-content"><%= news.content %></p>
                                 <div class="date"><%= new Date(news.createdAt).toLocaleDateString() %></div>
                             </div>
                         </div>
@@ -161,6 +161,71 @@
                     card.style.setProperty('--mouse-y', `${y}%`);
                 });
             });
+
+            // Function to truncate text to fit container
+            function truncateText(element, maxLines = 1) {
+                const container = element.parentElement;
+                const text = element.getAttribute('data-text');
+                
+                if (!text) return;
+
+                let truncated = text;
+                const originalText = text;
+                
+                // Create a temporary element to measure text width
+                const temp = document.createElement('span');
+                temp.style.visibility = 'hidden';
+                temp.style.whiteSpace = 'nowrap';
+                temp.style.position = 'absolute';
+                temp.style.left = '-9999px';
+                temp.style.font = window.getComputedStyle(element).font;
+                document.body.appendChild(temp);
+
+                // Try to fit text in maxLines
+                let lines = 1;
+                while (lines <= maxLines) {
+                    temp.textContent = truncated;
+                    if (temp.scrollWidth <= container.offsetWidth) {
+                        break;
+                    }
+                    
+                    // Reduce text by word
+                    const words = truncated.split(' ');
+                    if (words.length <= 1) break; // Can't reduce further
+                    
+                    truncated = words.slice(0, -1).join(' ') + '...';
+                    lines++;
+                }
+
+                document.body.removeChild(temp);
+                element.textContent = truncated;
+            }
+
+            // Initialize text truncation
+            function initializeTextTruncation() {
+                const titles = document.querySelectorAll('.dynamic-title');
+                const contents = document.querySelectorAll('.dynamic-content');
+
+                titles.forEach(title => {
+                    title.setAttribute('data-text', title.textContent);
+                    truncateText(title, 1); // 1 line for title
+                });
+
+                contents.forEach(content => {
+                    content.setAttribute('data-text', content.textContent);
+                    truncateText(content, 3); // 3 lines for content
+                });
+            }
+
+            // Handle window resize
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(initializeTextTruncation, 250);
+            });
+
+            // Initial setup
+            initializeTextTruncation();
 
             document.body.classList.add('loaded');
         });

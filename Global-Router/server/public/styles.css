@@ -601,11 +601,43 @@ img {
 
 .news-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
+}
+
+@media (max-width: 1200px) {
+    .news-list {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .news-list {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .news-list {
+        grid-template-columns: repeat(1, 1fr);
+        gap: 1rem;
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .news-list {
+        grid-template-columns: repeat(1, 1fr);
+        gap: 0.75rem;
+        padding: 0.75rem;
+    }
 }
 
 .news-card {
