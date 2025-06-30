@@ -47,7 +47,7 @@ model Region {
 model IpLog {
   id          Int      @id @default(autoincrement())
   ip          String   @unique
-  requestCount Int      @default(0)
+  requestCount Int     @default(0)
   lastUsed    DateTime @default(now())
   banned      Boolean  @default(false)
   banReason   String?
