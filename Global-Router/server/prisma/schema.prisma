@@ -34,6 +34,7 @@ model News {
   regionId  Int
   user      User      @relation(fields: [userId], references: [id])
   userId    Int
+  createdAt DateTime @default(now())
 }
 
 model Region {
