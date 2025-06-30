@@ -425,7 +425,6 @@ img {
     box-shadow: 0 6px 20px rgba(255, 129, 119, 0.4);
 }
 
-/* Add to styles.css for form group styling */
 .form-group {
     margin-bottom: 22px;
     display: flex;
@@ -564,6 +563,7 @@ img {
     padding: 24px 20px;
     font-size: 20px;
     color: #cac7ff;
+    width: 90%;
 }
 
 .search-bar:focus-within {
@@ -616,6 +616,7 @@ img {
     transition: 0.2s;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .news-card-content {
@@ -663,20 +664,22 @@ img {
 }
 
 .autocomplete-results {
-    display: none;
     position: absolute;
-    background: #23272f;
-    border-radius: 4px;
-    z-index: 1001;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #181818;
+    border-radius: 8px;
+    padding: 8px 0;
     max-height: 200px;
     overflow-y: auto;
-    width: 100%;
-    margin-top: 0.5rem;
-    transform-origin: top;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    transform: translateY(-10px) scale(0.95);
+    z-index: 1001;
+    display: none;
     opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    pointer-events: auto;
 }
 
 .autocomplete-results.open {
@@ -686,21 +689,25 @@ img {
 }
 
 .autocomplete-item {
-    padding: 0.5rem;
+    padding: 0.5rem 1rem;
     color: white;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
     display: block;
-}
-
-.autocomplete-results {
+    background: #222;
+    border-radius: 6px;
+    margin: 4px 8px;
     pointer-events: auto;
 }
 
-.autocomplete-item {
-    pointer-events: auto;
+.autocomplete-item:hover {
+    background: #333;
+}
+
+.autocomplete-item.active {
+    background: #444;
 }
 
 .post-btn {
