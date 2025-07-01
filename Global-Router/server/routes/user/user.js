@@ -2,7 +2,7 @@ import express from 'express';
 import prisma from '../../prismaClient.js';
 import {fileURLToPath} from 'url';
 import path, {dirname} from 'path';
-import {fetch, CookieJar} from 'node-fetch-cookies'
+// import {fetch, CookieJar} from 'node-fetch-cookies'
 
 const router = express.Router();
 
@@ -54,10 +54,9 @@ router.get('/post', async (req, res) => {
 router.post('/post', async (req, res) => {
     const { title, content } = req.body;
 
-    const cookieJar = new CookieJar();
     let jwt;
     try {
-        const jwt_res = await fetch(cookieJar, 'http://validity-ai-server-service:8000/auth/login', {
+        const jwt_res = await fetch('http://validity-ai-server-service:8000/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -68,7 +67,7 @@ router.post('/post', async (req, res) => {
         });
 
         if (!jwt_res.ok) {
-            console.error('Failed to authenticate with AI server');
+            console.error('Failed to authentic.0ate with AI server');
             return res.status(500).send('Failed to authenticate with AI server');
         }
 
@@ -78,7 +77,7 @@ router.post('/post', async (req, res) => {
             const cookies = setCookieHeader.split(',');
             for (const cookie of cookies) {
                 const parts = cookie.split(';')[0].split('=');
-                if (parts[0].trim() === 'jwt') {
+                if (parts[0].trim() === 'access_token') {
                     jwt = parts[1];
                     break;
                 }
@@ -92,10 +91,10 @@ router.post('/post', async (req, res) => {
 
         // Now verify title
         let titleVerification = await fetch(`http://validity-ai-server-service:8000/api/ta?claim=${title.replaceAll(" ", "-")}`, {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'access_token': jwt,
+                'Cookie': `access_token=${jwt}`,
             },
         });
 
