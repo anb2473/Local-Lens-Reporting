@@ -98,7 +98,14 @@ router.post('/post', async (req, res) => {
             },
         });
 
-        console.log(titleVerification);
+        // Now verify content
+        let contentVerification = await fetch(`http://validity-ai-server-service:8000/api/ta?claim=${content.replaceAll(" ", "-")}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Cookie': `access_token=${jwt}`,
+            },
+        });
 
         const user = await prisma.user.findFirst({ where: { id: req.userID } });
         const region = await prisma.region.findFirst({ where: { id: user.regionId } });
@@ -108,7 +115,9 @@ router.post('/post', async (req, res) => {
                 title: title,
                 content: content,
                 region: { connect: { id: user.regionId } },
-                user: { connect: { id: req.userID } }
+                user: { connect: { id: req.userID } },
+                titleReliability: titleVerification ? titleVerification.json() : {},
+                contentReliability: contentVerification ? contentVerification.json() : {},
             },
         });
         res.redirect(`/user/search?q=${region.name}`);

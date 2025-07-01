@@ -15,8 +15,8 @@ GET http://127.0.0.1:8000/api/ta
 Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5YWQ2YzJhZjY3MjM1MDU4YmE5MDEzNmY0ZTVjMjQ4ZiIsImV4cCI6MTc1MDEyNjUxMH0.7ol-58jdIO5yd2tpd0FzCSeKV9K6vLCWqWmYZZOHYkg
 
 ### Test text analyzer endpoint with valid JWT cookiem and valid query
-GET http://127.0.0.1:8000/api/ta?claim=There-are-donkeys-on-mars
-Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MDI2YmQwMWM4NjY4MDQ1OGNlNDJiY2I3ZTM2OWQ1NyIsImV4cCI6MTc1MDI3MDE1OX0.FJPQ7Kb9zBWdCdEKgHdnyTwPoVTE8oYl2N0V6aMvUtM
+GET http://127.0.0.1:8000/api/ta?claim=There-are-donkeys-on-mars.-there-are-also-spaceships-on-the-moon.-I-like-donkeys.
+Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0YmIxNTY4OWZlYzAzMjNjYjk0MzcxYmU5NDNjMjk4YiIsImV4cCI6MTc1MTQwMzU1Mn0.PSze98uVlky2k7ceQI6vCJXCf-Bn0iUdfy-yyoAy39A
 ### Test text equivilence analyzer endpoint with valid JWT cookiem and valid query
 GET http://127.0.0.1:8000/api/tea?claim-1=There-are-donkeys-on-mars&claim-2=Donkes-exist-on-mars
-Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MDI2YmQwMWM4NjY4MDQ1OGNlNDJiY2I3ZTM2OWQ1NyIsImV4cCI6MTc1MDI3MDE1OX0.FJPQ7Kb9zBWdCdEKgHdnyTwPoVTE8oYl2N0V6aMvUtM
+Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0YmIxNTY4OWZlYzAzMjNjYjk0MzcxYmU5NDNjMjk4YiIsImV4cCI6MTc1MTQwMzU1Mn0.PSze98uVlky2k7ceQI6vCJXCf-Bn0iUdfy-yyoAy39A

@@ -35,6 +35,8 @@ model News {
   user      User      @relation(fields: [userId], references: [id])
   userId    Int
   createdAt DateTime @default(now())
+  titleReliability Json?
+  contentReliability Json?
 }
 
 model Region {

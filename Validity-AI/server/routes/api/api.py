@@ -6,6 +6,7 @@ from models.text_analyzer import analyze_claims_plausibility
 from models.text_equivilence_analyzer import check_text_meaning_similarity
 
 import re
+from collections import Counter
 
 api_router = APIRouter(
     dependencies=[Depends(auth_middleware)]
@@ -20,7 +21,51 @@ async def text_analyzer(req: Request):
             detail="Missing 'claim' parameter in query string"
         )
     claim = claim.replace("-", " ")
-    claims = re.split(r'[.;?!]', claim)
+    n = 5  # minimum number of words per claim section
+    claims_raw = re.split(r'[.;?!]', claim)
+    claims = []
+    buffer = ""
+    for section in claims_raw:
+        section = section.strip()
+        if not section:
+            continue
+        words = section.split()
+        if len(words) == 0:
+            continue
+        if len(words) < n:
+            buffer = (buffer + " " + section).strip()
+        else:
+            if buffer:
+                claims.append(buffer)
+                buffer = ""
+            claims.append(section)
+    if buffer:
+        claims.append(buffer)
+
+    # Get the result from analyze_claims_plausibility
+    result = analyze_claims_plausibility(claims)
+
+    # Calculate average plausibility and label
+    plausibilities = []
+    labels = []
+    for item in result:
+        plausibility = item.get("plausibility")
+        label = item.get("label")
+        if plausibility is not None:
+            plausibilities.append(plausibility)
+        if label is not None:
+            labels.append(label)
+
+    average_plausibility = sum(plausibilities) / len(plausibilities) if plausibilities else 0
+
+    # Get the most common label as average_label
+    average_label = Counter(labels).most_common(1)[0][0] if labels else None
+
+    return {
+        "result_of_analyze_claims_plausibility": result,
+        "average_plausibility": average_plausibility,
+        "average_label": average_label
+    }
     return analyze_claims_plausibility(claims)
 
 @api_router.get("/tea", response_class=JSONResponse)
