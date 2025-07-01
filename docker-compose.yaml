@@ -14,16 +14,18 @@ services:
 
   # Global Router Service (With Database)
   global-router-server-service:
-    build: ./Global-Router/server
+    build: ./global-router/server
     container_name: global-router
     environment:
-      - SECRET_KEY=ebd9197c201d1e315a5bea2858c7cc50e8a21ab4be7874212cbbd7b489cede95
       - DATABASE_URL=postgresql://postgres:postgres@global-router-db:5432/global_router_db
+      - SECRET_KEY=ebd9197c201d1e315a5bea2858c7cc50e8a21ab4be7874212cbbd7b489cede95
+      - NODE_ENV=production
     ports:
       - "3000:3000"
     depends_on:
-      global-router-db-service:
-        condition: service_healthy
+      - global-router-db-service
+    volumes:
+      - ./Global-Router/server:/app
 
   # Global Router Database Service (Manages User Data)
   global-router-db-service:
@@ -38,21 +40,5 @@ services:
     volumes:
       - global-router-db-data:/var/lib/postgresql/data
 
-  # Washington DC Area Service (With Database)
-
-  # Washington DC Area Database Service (Manages Regional Events)
-  washington-dc-area:
-    image: postgres:13-alpine
-    container_name: washington-dc-db
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: washington_dc_db
-    ports:
-      - "4062:5432"
-    volumes:
-      - washington-dc-db-data:/var/lib/postgresql/data
-
 volumes:
   global-router-db-data:
-  washington-dc-db-data:

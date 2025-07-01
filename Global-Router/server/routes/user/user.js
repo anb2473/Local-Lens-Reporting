@@ -2,6 +2,7 @@ import express from 'express';
 import prisma from '../../prismaClient.js';
 import {fileURLToPath} from 'url';
 import path, {dirname} from 'path';
+import {fetch, CookieJar} from 'node-fetch-cookies'
 
 const router = express.Router();
 
@@ -52,9 +53,57 @@ router.get('/post', async (req, res) => {
 
 router.post('/post', async (req, res) => {
     const { title, content } = req.body;
-    const user = await prisma.user.findFirst({ where: { id: req.userID } });
-    const region = await prisma.region.findFirst({ where: { id: user.regionId } });
+
+    const cookieJar = new CookieJar();
+    let jwt;
     try {
+        const jwt_res = await fetch(cookieJar, 'http://validity-ai-server-service:8000/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                passw: "passw0rd",
+            })
+        });
+
+        if (!jwt_res.ok) {
+            console.error('Failed to authenticate with AI server');
+            return res.status(500).send('Failed to authenticate with AI server');
+        }
+
+        // Get the JWT from the response headers
+        const setCookieHeader = jwt_res.headers.get('set-cookie');
+        if (setCookieHeader) {
+            const cookies = setCookieHeader.split(',');
+            for (const cookie of cookies) {
+                const parts = cookie.split(';')[0].split('=');
+                if (parts[0].trim() === 'jwt') {
+                    jwt = parts[1];
+                    break;
+                }
+            }
+        }
+
+        if (!jwt) {
+            console.error('No JWT found in response');
+            return res.status(500).send('Failed to get JWT from AI server');
+        }
+
+        // Now verify title
+        let titleVerification = await fetch(`http://validity-ai-server-service:8000/api/ta?claim=${title.replaceAll(" ", "-")}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'access_token': jwt,
+            },
+        });
+
+        console.log(titleVerification);
+
+        const user = await prisma.user.findFirst({ where: { id: req.userID } });
+        const region = await prisma.region.findFirst({ where: { id: user.regionId } });
+
         const post = await prisma.news.create({
             data: {
                 title: title,
@@ -65,8 +114,8 @@ router.post('/post', async (req, res) => {
         });
         res.redirect(`/user/search?q=${region.name}`);
     } catch (error) {
-        console.error('Error creating post:', error);
-        res.status(500).send('Error creating post');
+        console.error('Error in /post:', error);
+        res.status(500).send('Error processing post');
     }
 });
 

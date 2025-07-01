@@ -454,7 +454,22 @@ img {
     outline: none;
 }
 
-.form-group input:focus {
+.form-group textarea {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1.5px solid #4a4a4a;
+    background: #23272f;
+    color: #fff;
+    font-size: 1rem;
+    width: 260px;
+    height: 100px;
+    resize: vertical;
+    transition: border 0.2s;
+    outline: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
     border: 1.5px solid #ff8177;
     background: #23272f;
 }
