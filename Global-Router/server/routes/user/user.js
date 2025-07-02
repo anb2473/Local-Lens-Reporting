@@ -107,8 +107,15 @@ router.post('/post', async (req, res) => {
             },
         });
 
+        const regionName = req.query.r
         const user = await prisma.user.findFirst({ where: { id: req.userID } });
-        const region = await prisma.region.findFirst({ where: { id: user.regionId } });
+
+        if (regionName === '') {
+            const region = await prisma.region.findFirst({ where: { id: regionId } });
+        }
+        else {
+            const region = await prisma.region.findFirst({ where: { name: regionName } });
+        }
 
         const post = await prisma.news.create({
             data: {
@@ -120,7 +127,7 @@ router.post('/post', async (req, res) => {
                 contentReliability: contentVerification ? contentVerification.json() : {},
             },
         });
-        res.redirect(`/user/search?q=${region.name}`);
+        res.redirect(`/user/search?q=${regionName}`);
     } catch (error) {
         console.error('Error in /post:', error);
         res.status(500).send('Error processing post');
