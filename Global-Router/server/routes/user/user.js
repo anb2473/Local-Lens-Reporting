@@ -121,7 +121,7 @@ router.post('/post', async (req, res) => {
             data: {
                 title: title,
                 content: content,
-                region: { connect: { id: user.regionId } },
+                region: { connect: { id: region.id } },
                 user: { connect: { id: req.userID } },
                 titleReliability: titleVerification ? titleVerification.json() : {},
                 contentReliability: contentVerification ? contentVerification.json() : {},
