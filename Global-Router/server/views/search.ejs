@@ -80,9 +80,11 @@
                         <div class="news-card" data-title="<%= news.title %>" data-content="<%= news.content %>">
                             <div class="bloom"></div>
                             <div class="news-card-content">
-                                <h1 class="dynamic-check-label"><%= news.total_label %></div>
-                                <h3 class="dynamic-title"><%= news.title %></h3>
-                                <p class="dynamic-content"><%= news.averagePlausability %></p>
+                                <div class="title-row">
+                                    <h3 class="dynamic-title"><%= news.title %></h3>
+                                    <h1 class="dynamic-check-label"><%= news.averagePlausability %></h1>
+                                </div>
+                                <p class="dynamic-content"><%= news.content %></p>
                                 <div class="date"><%= new Date(news.createdAt).toLocaleDateString() %></div>
                             </div>
                         </div>
