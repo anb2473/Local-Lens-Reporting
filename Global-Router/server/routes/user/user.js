@@ -67,7 +67,7 @@ router.post('/post', async (req, res) => {
         });
 
         if (!jwt_res.ok) {
-            console.error('Failed to authentic.0ate with AI server');
+            console.error('Failed to authenticate with AI server');
             return res.status(500).send('Failed to authenticate with AI server');
         }
 
@@ -96,7 +96,7 @@ router.post('/post', async (req, res) => {
                 'Content-Type': 'application/json',
                 'Cookie': `access_token=${jwt}`,
             },
-        });
+        }).json();
 
         // Now verify content
         let contentVerification = await fetch(`http://validity-ai-server-service:8000/api/ta?claim=${content.replaceAll(" ", "-")}`, {
@@ -105,7 +105,7 @@ router.post('/post', async (req, res) => {
                 'Content-Type': 'application/json',
                 'Cookie': `access_token=${jwt}`,
             },
-        });
+        }).json();
 
         const regionName = req.query.r
         const user = await prisma.user.findFirst({ where: { id: req.userID } });
@@ -117,6 +117,8 @@ router.post('/post', async (req, res) => {
             const region = await prisma.region.findFirst({ where: { name: regionName } });
         }
 
+        const averagePlausability = (contentVerification.plausability + titleVerification.plausability) / 2;
+
         const post = await prisma.news.create({
             data: {
                 title: title,
@@ -125,6 +127,7 @@ router.post('/post', async (req, res) => {
                 user: { connect: { id: req.userID } },
                 titleReliability: titleVerification ? titleVerification.json() : {},
                 contentReliability: contentVerification ? contentVerification.json() : {},
+                averagePlausability: averagePlausability,
             },
         });
         res.redirect(`/user/search?q=${regionName}`);

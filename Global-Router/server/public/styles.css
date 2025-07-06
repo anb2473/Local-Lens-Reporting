@@ -699,6 +699,16 @@ img {
     margin-bottom: 1rem;
 }
 
+.news-card h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: right;
+    color: #ff8177;
+    margin: 0 0 1rem 0;
+    line-height: 1;
+    letter-spacing: 1px;
+}
+
 .news-card .date {
     color: #ffffff;
     font-size: 0.875rem;
