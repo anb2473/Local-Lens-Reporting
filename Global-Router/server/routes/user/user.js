@@ -90,34 +90,38 @@ router.post('/post', async (req, res) => {
         }
 
         // Now verify title
-        let titleVerification = await fetch(`http://validity-ai-server-service:8000/api/ta?claim=${title.replaceAll(" ", "-")}`, {
+        let titleRes = await fetch(`http://validity-ai-server-service:8000/api/ta?claim=${title.replaceAll(" ", "-")}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Cookie': `access_token=${jwt}`,
             },
-        }).json();
+        });
+        let titleVerification = await titleRes.json();
 
         // Now verify content
-        let contentVerification = await fetch(`http://validity-ai-server-service:8000/api/ta?claim=${content.replaceAll(" ", "-")}`, {
+        let contentRes = await fetch(`http://validity-ai-server-service:8000/api/ta?claim=${content.replaceAll(" ", "-")}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Cookie': `access_token=${jwt}`,
             },
-        }).json();
+        });
+        let contentVerification = await contentRes.json();
 
         const regionName = req.query.r
         const user = await prisma.user.findFirst({ where: { id: req.userID } });
 
+        let region;
+
         if (regionName === '') {
-            const region = await prisma.region.findFirst({ where: { id: regionId } });
+            region = await prisma.region.findFirst({ where: { id: regionId } });
         }
         else {
-            const region = await prisma.region.findFirst({ where: { name: regionName } });
+            region = await prisma.region.findFirst({ where: { name: regionName } });
         }
 
-        const averagePlausability = (contentVerification.plausability + titleVerification.plausability) / 2;
+        const averagePlausibility = (contentVerification.average_plausibility + titleVerification.average_plausibility) / 2;
 
         const post = await prisma.news.create({
             data: {
@@ -125,9 +129,9 @@ router.post('/post', async (req, res) => {
                 content: content,
                 region: { connect: { id: region.id } },
                 user: { connect: { id: req.userID } },
-                titleReliability: titleVerification ? titleVerification.json() : {},
-                contentReliability: contentVerification ? contentVerification.json() : {},
-                averagePlausability: averagePlausability,
+                titleReliability: titleVerification,
+                contentReliability: contentVerification,
+                averagePlausability: averagePlausibility,
             },
         });
         res.redirect(`/user/search?q=${regionName}`);

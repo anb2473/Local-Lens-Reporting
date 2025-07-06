@@ -45,29 +45,18 @@ async def text_analyzer(req: Request):
     # Get the result from analyze_claims_plausibility
     result = analyze_claims_plausibility(claims)
 
-    # Calculate average plausibility and label
-    plausibilities = []
-    labels = []
-    for item in result:
-        plausibility = item.get("plausibility")
-        label = item.get("label")
-        if plausibility is not None:
-            plausibilities.append(plausibility)
-        if label is not None:
-            labels.append(label)
-
-    average_plausibility = sum(plausibilities) / len(plausibilities) if plausibilities else 0
-
-    # Get the most common label as average_label
-    average_label = Counter(labels).most_common(1)[0][0] if labels else None
+    plausible_score = result.get("plausible_score", 0.0)
+    implausible_score = result.get("implausible_score", 0.0)
+    if plausible_score + implausible_score > 0:
+        average_plausibility = plausible_score / (plausible_score + implausible_score)
+    else:
+        average_plausibility = 0.0
 
     return {
         "result_of_analyze_claims_plausibility": result,
         "average_plausibility": average_plausibility,
-        "average_label": average_label
     }
-    return analyze_claims_plausibility(claims)
-
+\
 @api_router.get("/tea", response_class=JSONResponse)
 async def text_equivilence_analyzer(req: Request):
     claim1 = req.query_params.get("claim-1")
