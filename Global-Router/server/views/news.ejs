@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Local Lens</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="overlay"></div>
+    <header class="header">
+        <h1 class="logo">Local Lens</h1>
+        <nav class="nav-links">
+            <a href="/">Home</a>
+            <a href="our-solution">Our Solution</a>
+            <a href="about">About Me</a>
+        </nav>
+        <button class="menu-btn" aria-label="Open navigation">
+            <span class="bar bar1"></span>
+            <span class="bar bar2"></span>
+            <span class="bar bar3"></span>
+        </button>
+    </header>
+
+    <main style="display: flex; flex-direction: column;">
+        <div class="search-bar-container">
+            <form action="search" method="get" class="search-bar">
+                <div class="autocomplete-container">
+                    <input type="text" name="q" placeholder="search your region" value="<%= query || '' %>" autocomplete="off" id="autocompleteInput">
+                    <div class="autocomplete-results" id="autocompleteResults">
+                        <% regions.forEach(region => { %>
+                            <div class="autocomplete-item" data-region="<%= region.name %>" style="display: none;">
+                                <%= region.name %>
+                            </div>
+                        <% }) %>
+
+                        <script>
+                            const searchInput = document.getElementById('autocompleteInput');
+                            const autocompleteItems = document.querySelectorAll('.autocomplete-item');
+
+                            function checkAutocompleteItems() {
+                                autocompleteItems.forEach(item => {
+                                    console.log(searchInput.value, item.textContent, item.textContent.toLowerCase().includes(searchInput.value.toLowerCase()));
+                                    if (item.textContent.toLowerCase().includes(searchInput.value.toLowerCase())) {
+                                        item.style.display = 'block';
+                                    } else {
+                                        item.style.display = 'none';
+                                    }
+                                });
+                            }
+
+                            searchInput.addEventListener('input', checkAutocompleteItems);
+                        </script>   
+                    </div>
+                </div>
+                <button type="submit"><img src="../images/search.png" alt=""></button>
+            </form>
+            <a href="post?r=<%= query || '' %>" class="post-btn">Post</a>
+        </div>
+
+        <div style="justify-content: center; display: flex; padding-top: 75px;">
+            <% if (query) { %>
+                <% if (region) { %>
+                    <div class="falling-text-large">
+                        <h1 class="major-text">Welcome</h1>
+                        <h2 class="minor-text">to <%= query %></h2>
+                    </div>
+                <% } else { %>
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <h2 style="color: white;">Sorry, "<%= query %>" is not covered yet!</h2>
+                        <img src="../images/not-found.jpg" alt="" style="width: 50%; margin-top: 25px; border-radius: 25px; border: 0; object-fit: contain;">
+                    </div>
+                <% } %>
+            <% } %>
+        </div>
+
+        <% if (region && region.news) { %>
+            <% if (region.news.length > 0) { %>
+                <div class="news-list">
+                    <% region.news.forEach(news => { %>
+                        <div class="news-card" data-title="<%= news.title %>" data-content="<%= news.content %>">
+                            <div class="bloom"></div>
+                            <div class="news-card-content">
+                                <div class="title-row">
+                                    <h3 class="dynamic-title"><%= news.title %></h3>
+                                    <h1 class="dynamic-check-label"><%= news.averagePlausability %></h1>
+                                </div>
+                                <p class="dynamic-content"><%= news.content %></p>
+                                <div class="date"><%= new Date(news.createdAt).toLocaleDateString() %></div>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } else { %>
+                <div class="no-results">
+                    No news found for this region.
+                </div>
+            <% } %>
+        <% } %>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuBtn = document.querySelector('.header .menu-btn');
+            const navLinks = document.querySelector('.header .nav-links');
+            if (menuBtn && navLinks) {
+                menuBtn.addEventListener('click', function() {
+                    menuBtn.classList.toggle('open');
+                    navLinks.classList.toggle('open');
+                });
+            }
+
+            const searchInput = document.getElementById('autocompleteInput');
+            const resultsContainer = document.getElementById('autocompleteResults');
+            const autocompleteItems = document.querySelectorAll('.autocomplete-item');
+
+            if (searchInput && resultsContainer) {
+                searchInput.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+
+                    // Show results container if there's input
+                    resultsContainer.classList.toggle('open', searchTerm.length > 0);
+
+                    // Filter and show/hide items
+                    autocompleteItems.forEach(item => {
+                        const region = item.getAttribute('data-region');
+                        const isVisible = region.toLowerCase().includes(searchTerm);
+                        item.style.display = isVisible ? 'block' : 'none';
+
+                        if (isVisible && searchTerm === region.toLowerCase()) {
+                            item.classList.add('selected');
+                        } else {
+                            item.classList.remove('selected');
+                        }
+                    });
+                });
+
+                // Handle clicking on a region
+                resultsContainer.addEventListener('click', function(e) {
+                    const item = e.target.closest('.autocomplete-item');
+                    if (item) {
+                        searchInput.value = item.getAttribute('data-region');
+                        // Submit the form
+                        searchInput.closest('form').submit();
+                    }
+                });
+
+                // Close when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!searchInput.contains(e.target) && !resultsContainer.contains(e.target)) {
+                        resultsContainer.classList.remove('open');
+                    }
+                });
+            }
+
+            // Initialize bloom effect for all news cards
+            const newsCards = document.querySelectorAll('.news-card');
+            newsCards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = (e.clientX - rect.left) / rect.width * 100;
+                    const y = (e.clientY - rect.top) / rect.height * 100;
+                    
+                    card.style.setProperty('--mouse-x', `${x}%`);
+                    card.style.setProperty('--mouse-y', `${y}%`);
+                });
+            });
+
+            // Function to truncate text to fit container
+            function truncateText(element, maxLines = 1) {
+                const container = element.parentElement;
+                const text = element.getAttribute('data-text');
+                
+                if (!text) return;
+
+                let truncated = text;
+                const originalText = text;
+                
+                // Create a temporary element to measure text width
+                const temp = document.createElement('span');
+                temp.style.visibility = 'hidden';
+                temp.style.whiteSpace = 'nowrap';
+                temp.style.position = 'absolute';
+                temp.style.left = '-9999px';
+                temp.style.font = window.getComputedStyle(element).font;
+                document.body.appendChild(temp);
+
+                // Try to fit text in maxLines
+                let lines = 1;
+                while (lines <= maxLines) {
+                    temp.textContent = truncated;
+                    if (temp.scrollWidth <= container.offsetWidth) {
+                        break;
+                    }
+                    
+                    // Reduce text by word
+                    const words = truncated.split(' ');
+                    if (words.length <= 1) break; // Can't reduce further
+                    
+                    truncated = words.slice(0, -1).join(' ') + '...';
+                    lines++;
+                }
+
+                document.body.removeChild(temp);
+                element.textContent = truncated;
+            }
+
+            // Initialize text truncation
+            function initializeTextTruncation() {
+                const titles = document.querySelectorAll('.dynamic-title');
+                const contents = document.querySelectorAll('.dynamic-content');
+
+                titles.forEach(title => {
+                    title.setAttribute('data-text', title.textContent);
+                    truncateText(title, 1); // 1 line for title
+                });
+
+                contents.forEach(content => {
+                    content.setAttribute('data-text', content.textContent);
+                    truncateText(content, 3); // 3 lines for content
+                });
+            }
+
+            // Handle window resize
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(initializeTextTruncation, 250);
+            });
+
+            // Initial setup
+            initializeTextTruncation();
+
+            document.body.classList.add('loaded');
+        });
+    </script>
+</body>
+</html>
