@@ -131,7 +131,7 @@ router.post('/post', async (req, res) => {
                 user: { connect: { id: req.userID } },
                 titleReliability: titleVerification,
                 contentReliability: contentVerification,
-                averagePlausability: averagePlausibility,
+                averagePlausability: Math.floor(averagePlausibility * 100),
             },
         });
         res.redirect(`/user/search?q=${regionName}`);

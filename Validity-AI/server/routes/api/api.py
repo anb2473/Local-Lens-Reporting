@@ -45,8 +45,15 @@ async def text_analyzer(req: Request):
     # Get the result from analyze_claims_plausibility
     result = analyze_claims_plausibility(claims)
 
-    plausible_score = result.get("plausible_score", 0.0)
-    implausible_score = result.get("implausible_score", 0.0)
+    plausible_score = 0
+    implausible_score = 0
+    count = 0
+    for claim_output in result:
+        plausible_score += claim_output.get("plausible_score", 0.0)
+        implausible_score += claim_output.get("implausible_score", 0.0)
+        count += 1
+
+    # Normalize to get a confidence between 0 and 1
     if plausible_score + implausible_score > 0:
         average_plausibility = plausible_score / (plausible_score + implausible_score)
     else:
@@ -54,9 +61,9 @@ async def text_analyzer(req: Request):
 
     return {
         "result_of_analyze_claims_plausibility": result,
-        "average_plausibility": average_plausibility,
+        "average_plausibility": float(average_plausibility),
     }
-\
+
 @api_router.get("/tea", response_class=JSONResponse)
 async def text_equivilence_analyzer(req: Request):
     claim1 = req.query_params.get("claim-1")
