@@ -141,4 +141,25 @@ router.post('/post', async (req, res) => {
     }
 });
 
+router.get('/news', async (req, res) => {
+    const newsId = req.query.news;
+    if (!newsId) {
+        return res.status(400).send('News ID is required');
+    }
+    try {
+        const news = await prisma.news.findUnique({
+            where: { id: parseInt(newsId) },
+        });
+
+        if (!news) {
+            return res.status(404).send('News not found');
+        }
+
+        res.render('news', { news });
+    } catch (error) {
+        console.error('Error fetching news:', error);
+        res.status(500).send('Error fetching news');
+    }
+})
+
 export default router;
