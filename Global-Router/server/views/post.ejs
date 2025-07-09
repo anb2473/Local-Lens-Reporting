@@ -50,7 +50,7 @@
                     body: JSON.stringify({ title, content })
                 });
                 if (res.ok) {
-                    window.location.href = '/user/search';
+                    window.location.href = '/user/search?q=<%= region%>';
                 } else {
                     const data = await res.json();
                     err.textContent = data.err || 'Post failed';

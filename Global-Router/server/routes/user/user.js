@@ -47,8 +47,7 @@ router.get('/search', async (req, res) => {
 });
 
 router.get('/post', async (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'post.html'));
-    return;
+    res.render('post', { region: req.query.r || '' });
 });
 
 router.post('/post', async (req, res) => {
