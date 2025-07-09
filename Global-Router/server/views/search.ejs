@@ -76,7 +76,7 @@
         <% if (region && region.news) { %>
             <% if (region.news.length > 0) { %>
                 <div class="news-list">
-                    <% region.news.forEach(news => { %>
+                    <% region.news.sort((a, b) => b.averagePlausability - a.averagePlausability).forEach(news => { %>
                         <a href="news?news=<%= news.id%>" style="text-decoration: none;">
                             <div class="news-card" data-title="<%= news.title %>" data-content="<%= news.content %>">
                                 <div class="bloom"></div>
