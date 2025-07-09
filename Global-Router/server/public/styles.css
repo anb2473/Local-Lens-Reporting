@@ -626,6 +626,10 @@ img {
     transition: all 0.3s ease;
 }
 
+input[type="date"] {
+    color-scheme: dark;
+}
+
 .date-picker:focus {
     outline: none;
     border-color: rgba(88, 98, 155, 0.8);
