@@ -167,43 +167,17 @@
                 });
             });
 
-            // Function to truncate text to fit container
-            function truncateText(element, maxLines = 1) {
-                const container = element.parentElement;
+            // Function to truncate text to a simple character limit
+            function truncateText(element, maxChars = 50) {
                 const text = element.getAttribute('data-text');
                 
                 if (!text) return;
 
-                let truncated = text;
-                const originalText = text;
-                
-                // Create a temporary element to measure text width
-                const temp = document.createElement('span');
-                temp.style.visibility = 'hidden';
-                temp.style.whiteSpace = 'nowrap';
-                temp.style.position = 'absolute';
-                temp.style.left = '-9999px';
-                temp.style.font = window.getComputedStyle(element).font;
-                document.body.appendChild(temp);
-
-                // Try to fit text in maxLines
-                let lines = 1;
-                while (lines <= maxLines) {
-                    temp.textContent = truncated;
-                    if (temp.scrollWidth <= container.offsetWidth) {
-                        break;
-                    }
-                    
-                    // Reduce text by word
-                    const words = truncated.split(' ');
-                    if (words.length <= 1) break; // Can't reduce further
-                    
-                    truncated = words.slice(0, -1).join(' ') + '...';
-                    lines++;
+                if (text.length > maxChars) {
+                    element.textContent = text.substring(0, maxChars) + '...';
+                } else {
+                    element.textContent = text;
                 }
-
-                document.body.removeChild(temp);
-                element.textContent = truncated;
             }
 
             // Initialize text truncation
@@ -213,12 +187,12 @@
 
                 titles.forEach(title => {
                     title.setAttribute('data-text', title.textContent);
-                    truncateText(title, 1); // 1 line for title
+                    truncateText(title, 40); // 40 chars for title
                 });
 
                 contents.forEach(content => {
                     content.setAttribute('data-text', content.textContent);
-                    truncateText(content, 3); // 3 lines for content
+                    truncateText(content, 40); // 120 chars for content
                 });
             }
 
