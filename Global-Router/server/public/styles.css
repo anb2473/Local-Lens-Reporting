@@ -614,6 +614,34 @@ img {
     background: rgba(88, 98, 155, 0.9);
 }
 
+.date-picker {
+    background: rgba(88, 98, 155, 0.3);
+    border: 1px solid rgba(88, 98, 155, 0.5);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: #cac7ff;
+    font-size: 16px;
+    margin: 0 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.date-picker:focus {
+    outline: none;
+    border-color: rgba(88, 98, 155, 0.8);
+    background: rgba(88, 98, 155, 0.4);
+}
+
+.date-picker::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
+
+.date-picker::-moz-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
+
 .news-list {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

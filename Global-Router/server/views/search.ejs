@@ -52,6 +52,7 @@
                         </script>   
                     </div>
                 </div>
+                <input type="date" name="date" value="<%= selectedDate || new Date().toISOString().split('T')[0] %>" class="date-picker">
                 <button type="submit"><img src="../images/search.png" alt=""></button>
             </form>
             <a href="post?r=<%= query || '' %>" class="post-btn">Post</a>
@@ -94,7 +95,7 @@
                 </div>
             <% } else { %>
                 <div class="no-results">
-                    No news found for this region.
+                    No news found for this region at this date.
                 </div>
             <% } %>
         <% } %>

@@ -12,11 +12,20 @@ const __dirname = path.join(__filename, '..', '..', '..');
 
 router.get('/search', async (req, res) => {
     const query = req.query.q || '';
+    const selectedDate = req.query.date || new Date().toISOString().split('T')[0];
+    
     try {
         const region = await prisma.region.findFirst({
             where: { name: query },
             include: {
-                news: true
+                news: {
+                    where: {
+                        createdAt: {
+                            gte: new Date(selectedDate + 'T00:00:00.000Z'),
+                            lt: new Date(selectedDate + 'T23:59:59.999Z')
+                        }
+                    }
+                }
             }
         });
         
@@ -30,18 +39,22 @@ router.get('/search', async (req, res) => {
             query: query, 
             region: region, 
             regions: regions,
+            selectedDate: selectedDate,
             news: region?.news || []
         });
     } catch (error) {
         console.error('Error fetching region:', error);
+        const regions = await prisma.region.findMany({
+            select: {
+                name: true,
+            },
+        });
         res.render('search', { 
             query: query, 
-            error: 'Error fetching region data',
-            regions: await prisma.region.findMany({
-                select: {
-                    name: true,
-                },
-            })
+            region: null,
+            regions: regions,
+            selectedDate: selectedDate,
+            error: 'Error fetching region data'
         });
     }
 });
