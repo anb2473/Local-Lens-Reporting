@@ -676,7 +676,7 @@ img {
     inset: 0;
     opacity: 0;
     background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), #ff8177, #6a0e95, transparent);
-    transition: opacity 0.3s ease-in-out;
+    transition: opacity 0.1s ease-in, opacity 0.6s ease-out;
     pointer-events: none;
     z-index: 1;
 }
