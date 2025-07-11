@@ -9,6 +9,7 @@
     <header class="header">
         <h1 class="logo">Local Lens</h1>
         <nav class="nav-links">
+            <a href="/">Home</a>
             <a href="dashboard">Dashboard</a>
             <a href="search">Search</a>
         </nav>
@@ -22,7 +23,10 @@
     <main class="dashboard-container">
         <div class="dashboard-header">
             <h2>Your Posts</h2>
-            <button class="toggle-all-btn" id="toggleAllBtn"><span>Expand All</span></button>
+            <div class="dashboard-actions">
+                <a href="post" class="quick-post-btn">Quick Post</a>
+                <button class="toggle-all-btn" id="toggleAllBtn"><span>Expand All</span></button>
+            </div>
         </div>
 
         <div class="posts-container">
