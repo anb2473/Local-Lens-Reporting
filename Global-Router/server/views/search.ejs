@@ -120,14 +120,16 @@
                 searchInput.addEventListener('input', function() {
                     const searchTerm = this.value.toLowerCase();
 
-                    // Show results container if there's input
-                    resultsContainer.classList.toggle('open', searchTerm.length > 0);
-
                     // Filter and show/hide items
+                    let visibleItems = 0;
                     autocompleteItems.forEach(item => {
                         const region = item.getAttribute('data-region');
                         const isVisible = region.toLowerCase().includes(searchTerm);
                         item.style.display = isVisible ? 'block' : 'none';
+                        
+                        if (isVisible) {
+                            visibleItems++;
+                        }
 
                         if (isVisible && searchTerm === region.toLowerCase()) {
                             item.classList.add('selected');
@@ -135,6 +137,9 @@
                             item.classList.remove('selected');
                         }
                     });
+
+                    // Show results container only if there's input AND visible items
+                    resultsContainer.classList.toggle('open', searchTerm.length > 0 && visibleItems > 0);
                 });
 
                 // Handle clicking on a region

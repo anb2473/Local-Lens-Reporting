@@ -68,22 +68,40 @@ img {
 }
 
 .header .nav-links a {
-    color: #fff;
+    color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
-    font-size: 1.2rem;
-    padding: 8px 16px;
-    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 8px;
     background: none;
     -webkit-background-clip: initial;
     background-clip: initial;
     -webkit-text-fill-color: initial;
-    transition: background 0.2s, color 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.header .nav-links a::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(135deg, #ff8177 0%, #ffb199 100%);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(-50%);
 }
 
 .header .nav-links a:hover {
-    background: #222;
-    color: #fff;
-    -webkit-text-fill-color: initial;
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.header .nav-links a:hover::before {
+    width: 80%;
 }
 
 .header .menu-btn {
@@ -1189,32 +1207,62 @@ input[type="date"] {
     pointer-events: auto;
 }
 
+.autocomplete-results:empty {
+    display: none !important;
+}
+
 .autocomplete-results.open {
     display: block;
     transform: translateY(0) scale(1);
     opacity: 1;
 }
 
+.autocomplete-results.open:not(:has(.autocomplete-item[style*="display: block"])) {
+    display: none !important;
+}
+
 .autocomplete-item {
-    padding: 0.5rem 1rem;
-    color: white;
+    padding: 0.75rem 1.25rem;
+    color: rgba(202, 199, 255, 0.7);
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-    overflow: hidden;
     display: block;
-    background: #222;
-    border-radius: 6px;
-    margin: 4px 8px;
+    margin: 2px 8px;
     pointer-events: auto;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 8px;
+}
+
+.autocomplete-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(135deg, #ff8177 0%, #ffb199 100%);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0.4;
+    border-radius: 8px;
 }
 
 .autocomplete-item:hover {
-    background: #333;
+    color: #cac7ff;
+    transform: translateX(4px);
+}
+
+.autocomplete-item:hover::before {
+    width: 3px;
 }
 
 .autocomplete-item.active {
-    background: #444;
+    color: #ffffff;
+}
+
+.autocomplete-item.active::before {
+    width: 3px;
 }
 
 .post-btn {
