@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Local Lens</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1 class="logo">Local Lens</h1>
+        <nav class="nav-links">
+            <a href="dashboard">Dashboard</a>
+            <a href="search">Search</a>
+        </nav>
+        <button class="menu-btn" aria-label="Open navigation">
+            <span class="bar bar1"></span>
+            <span class="bar bar2"></span>
+            <span class="bar bar3"></span>
+        </button>
+    </header>
+
+    <main class="dashboard-container">
+        <div class="dashboard-header">
+            <h2>Your Posts</h2>
+            <button class="toggle-all-btn" id="toggleAllBtn">Minimize All</button>
+        </div>
+
+        <div class="posts-container">
+            <% if (user.news && user.news.length > 0) { %>
+                <% user.news.forEach(post => { %>
+                    <div class="post-card" data-post-id="<%= post.id %>">
+                        <div class="post-header">
+                            <div class="post-title-section">
+                                <h3 class="post-title"><%= post.title %></h3>
+                                <span class="post-date"><%= new Date(post.createdAt).toLocaleDateString() %></span>
+                                <span class="post-region"><%= post.region.name %></span>
+                            </div>
+                            <div class="post-actions">
+                                <span class="plausibility-score"><%= post.averagePlausability %></span>
+                                <button class="toggle-btn" onclick="togglePost('<%= post.id %>')">−</button>
+                            </div>
+                        </div>
+                        
+                        <div class="post-content" id="content-<%= post.id %>">
+                            <p class="post-text"><%= post.content %></p>
+                            <div class="post-edit-actions">
+                                <button class="edit-btn" data-post-id="<%= post.id %>" data-post-title="<%= post.title %>" data-post-content="<%= post.content %>">Edit</button>
+                                <button class="delete-btn" data-post-id="<%= post.id %>">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div class="no-posts">
+                    <p>You haven't posted anything yet.</p>
+                    <a href="search" class="create-post-btn">Create Your First Post</a>
+                </div>
+            <% } %>
+        </div>
+    </main>
+
+    <script>
+        function togglePost(postId) {
+            const content = document.getElementById(`content-${postId}`);
+            const toggleBtn = content.previousElementSibling.querySelector('.toggle-btn');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                toggleBtn.textContent = '−';
+            } else {
+                content.style.display = 'none';
+                toggleBtn.textContent = '+';
+            }
+        }
+
+        function toggleAllPosts() {
+            const toggleBtn = document.getElementById('toggleAllBtn');
+            const postContents = document.querySelectorAll('.post-content');
+            const isMinimized = toggleBtn.textContent === 'Expand All';
+            
+            postContents.forEach(content => {
+                const toggleBtn = content.previousElementSibling.querySelector('.toggle-btn');
+                if (isMinimized) {
+                    content.style.display = 'block';
+                    toggleBtn.textContent = '−';
+                } else {
+                    content.style.display = 'none';
+                    toggleBtn.textContent = '+';
+                }
+            });
+            
+            toggleBtn.textContent = isMinimized ? 'Minimize All' : 'Expand All';
+        }
+
+        function editPost(postId, currentTitle, currentContent) {
+            const postCard = document.querySelector(`[data-post-id="${postId}"]`);
+            const content = document.getElementById(`content-${postId}`);
+            
+            content.innerHTML = `
+                <form class="edit-form" onsubmit="savePost('${postId}', event)">
+                    <div class="form-group">
+                        <label for="edit-title-${postId}">Title:</label>
+                        <input type="text" id="edit-title-${postId}" value="${currentTitle}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-content-${postId}">Content:</label>
+                        <textarea id="edit-content-${postId}" required rows="5">${currentContent}</textarea>
+                    </div>
+                    <div class="edit-actions">
+                        <button type="submit" class="save-btn">Save</button>
+                        <button type="button" class="cancel-btn" onclick="cancelEdit('${postId}', '${currentTitle}', '${currentContent}')">Cancel</button>
+                    </div>
+                </form>
+            `;
+        }
+
+        async function savePost(postId, event) {
+            event.preventDefault();
+            const title = document.getElementById(`edit-title-${postId}`).value;
+            const content = document.getElementById(`edit-content-${postId}`).value;
+            
+            try {
+                const response = await fetch(`/user/edit-post`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ postId, title, content })
+                });
+                
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert('Failed to update post');
+                }
+            } catch (error) {
+                alert('Error updating post');
+            }
+        }
+
+        function cancelEdit(postId, originalTitle, originalContent) {
+            const content = document.getElementById(`content-${postId}`);
+            content.innerHTML = `
+                <p class="post-text">${originalContent}</p>
+                <div class="post-edit-actions">
+                    <button class="edit-btn" onclick="editPost('${postId}', '${originalTitle.replace(/'/g, "\\'")}', '${originalContent.replace(/'/g, "\\'")}')">Edit</button>
+                    <button class="delete-btn" onclick="deletePost('${postId}')">Delete</button>
+                </div>
+            `;
+        }
+
+        async function deletePost(postId) {
+            if (!confirm('Are you sure you want to delete this post?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/user/delete-post`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ postId })
+                });
+                
+                if (response.ok) {
+                    const postCard = document.querySelector(`[data-post-id="${postId}"]`);
+                    postCard.remove();
+                } else {
+                    alert('Failed to delete post');
+                }
+            } catch (error) {
+                alert('Error deleting post');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuBtn = document.querySelector('.header .menu-btn');
+            const navLinks = document.querySelector('.header .nav-links');
+            if (menuBtn && navLinks) {
+                menuBtn.addEventListener('click', function() {
+                    menuBtn.classList.toggle('open');
+                    navLinks.classList.toggle('open');
+                });
+            }
+
+            const toggleAllBtn = document.getElementById('toggleAllBtn');
+            if (toggleAllBtn) {
+                toggleAllBtn.addEventListener('click', toggleAllPosts);
+            }
+
+            // Add event listeners for edit and delete buttons
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('edit-btn')) {
+                    const postId = e.target.getAttribute('data-post-id');
+                    const postTitle = e.target.getAttribute('data-post-title');
+                    const postContent = e.target.getAttribute('data-post-content');
+                    editPost(postId, postTitle, postContent);
+                }
+                
+                if (e.target.classList.contains('delete-btn')) {
+                    const postId = e.target.getAttribute('data-post-id');
+                    deletePost(postId);
+                }
+            });
+
+            document.body.classList.add('loaded');
+        });
+    </script>
+</body>
+</html>
