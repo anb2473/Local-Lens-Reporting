@@ -8,6 +8,13 @@ body {
     filter: blur(10px);
     transition: opacity 1s ease-in-out, filter 1s ease-in-out;
     overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+body::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
 }
 
 body, main {
@@ -635,6 +642,7 @@ input[type="date"] {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
+    margin-top: 2rem;
 }
 
 .dashboard-header {
@@ -656,16 +664,49 @@ input[type="date"] {
     background: linear-gradient(135deg, #ff8177 0%, #ffb199 100%);
     color: white;
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
+    padding: 1rem 2rem;
+    border-radius: 25px;
     cursor: pointer;
     font-weight: 600;
-    transition: all 0.3s ease;
+    font-size: 1.1rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(255, 129, 119, 0.2);
+}
+
+.toggle-all-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s ease;
+}
+
+.toggle-all-btn:hover::before {
+    left: 100%;
 }
 
 .toggle-all-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 129, 119, 0.3);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(255, 129, 119, 0.4);
+}
+
+.toggle-all-btn:active {
+    transform: translateY(-1px) scale(1.02);
+}
+
+.toggle-all-btn span {
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s ease;
+}
+
+.toggle-all-btn:hover span {
+    transform: scale(1.05);
 }
 
 .posts-container {
@@ -738,7 +779,10 @@ input[type="date"] {
     cursor: pointer;
     font-size: 1.2rem;
     font-weight: bold;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .toggle-btn:hover {
@@ -746,8 +790,29 @@ input[type="date"] {
     transform: scale(1.1);
 }
 
+.toggle-btn.rotated {
+    transform: rotate(180deg);
+    background: linear-gradient(135deg, #ff8177 0%, #ffb199 100%);
+}
+
 .post-content {
     padding: 1.5rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.post-content.collapsed {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.post-content.expanded {
+    max-height: 500px;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .post-text {
@@ -764,32 +829,52 @@ input[type="date"] {
 }
 
 .edit-btn, .delete-btn {
-    padding: 0.5rem 1rem;
+    padding: 0.75rem 1.5rem;
     border: none;
-    border-radius: 6px;
+    border-radius: 20px;
     cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
 }
 
 .edit-btn {
-    background: #4a90e2;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
 .edit-btn:hover {
-    background: #357abd;
-    transform: translateY(-1px);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
 }
 
 .delete-btn {
-    background: #e74c3c;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
     color: white;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
 }
 
 .delete-btn:hover {
-    background: #c0392b;
-    transform: translateY(-1px);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+}
+
+.edit-btn::before, .delete-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s ease;
+}
+
+.edit-btn:hover::before, .delete-btn:hover::before {
+    left: 100%;
 }
 
 .edit-form {

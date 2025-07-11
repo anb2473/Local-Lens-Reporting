@@ -22,7 +22,7 @@
     <main class="dashboard-container">
         <div class="dashboard-header">
             <h2>Your Posts</h2>
-            <button class="toggle-all-btn" id="toggleAllBtn">Minimize All</button>
+            <button class="toggle-all-btn" id="toggleAllBtn"><span>Expand All</span></button>
         </div>
 
         <div class="posts-container">
@@ -37,11 +37,11 @@
                             </div>
                             <div class="post-actions">
                                 <span class="plausibility-score"><%= post.averagePlausability %></span>
-                                <button class="toggle-btn" onclick="togglePost('<%= post.id %>')">−</button>
+                                <button class="toggle-btn" onclick="togglePost('<%= post.id %>')">+</button>
                             </div>
                         </div>
                         
-                        <div class="post-content" id="content-<%= post.id %>">
+                        <div class="post-content collapsed" id="content-<%= post.id %>">
                             <p class="post-text"><%= post.content %></p>
                             <div class="post-edit-actions">
                                 <button class="edit-btn" data-post-id="<%= post.id %>" data-post-title="<%= post.title %>" data-post-content="<%= post.content %>">Edit</button>
@@ -64,12 +64,16 @@
             const content = document.getElementById(`content-${postId}`);
             const toggleBtn = content.previousElementSibling.querySelector('.toggle-btn');
             
-            if (content.style.display === 'none') {
-                content.style.display = 'block';
+            if (content.classList.contains('collapsed')) {
+                content.classList.remove('collapsed');
+                content.classList.add('expanded');
                 toggleBtn.textContent = '−';
+                toggleBtn.classList.add('rotated');
             } else {
-                content.style.display = 'none';
+                content.classList.remove('expanded');
+                content.classList.add('collapsed');
                 toggleBtn.textContent = '+';
+                toggleBtn.classList.remove('rotated');
             }
         }
 
@@ -81,11 +85,15 @@
             postContents.forEach(content => {
                 const toggleBtn = content.previousElementSibling.querySelector('.toggle-btn');
                 if (isMinimized) {
-                    content.style.display = 'block';
+                    content.classList.remove('collapsed');
+                    content.classList.add('expanded');
                     toggleBtn.textContent = '−';
+                    toggleBtn.classList.add('rotated');
                 } else {
-                    content.style.display = 'none';
+                    content.classList.remove('expanded');
+                    content.classList.add('collapsed');
                     toggleBtn.textContent = '+';
+                    toggleBtn.classList.remove('rotated');
                 }
             });
             
