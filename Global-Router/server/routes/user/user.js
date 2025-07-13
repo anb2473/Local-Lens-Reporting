@@ -317,4 +317,49 @@ router.post('/delete-post', async (req, res) => {
     }
 });
 
+router.get('/chat-dash', async (req, res) => {
+    try {
+        const user = await prisma.user.findFirst({
+            where: { id: req.userID },
+            include: {
+                news: {
+                    include: {
+                        region: true,
+                    },
+                    orderBy: {
+                        createdAt: 'desc'
+                    }
+                },
+                chats: true,
+            },
+        });
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        const chats = user.chats || [];
+        res.render('chat-dash', { chats: chats })
+    } catch (error) {
+        console.error('Error fetching chat dashboard:', error);
+        res.status(500).send('Error fetching chat dashboard');
+    }
+})
+
+router.get('/chat', async (req, res) => {
+    try {
+        const chatId = req.query.id;
+        const chat = prisma.chats.findFirst({
+            where: {
+                id: chatId,
+            }
+        })
+
+        res.render('chat', {chat: chat, userId: req.query.userId})
+    } catch (error) {
+        console.error('Error fetching chat dashboard:', error);
+        res.status(500).send('Error fetching chat dashboard');
+    }
+})
+
 export default router;

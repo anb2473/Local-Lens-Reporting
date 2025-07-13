@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Local Lens</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1 class="logo">Local Lens</h1>
+        <nav class="nav-links">
+            <a href="dashboard">Dashboard</a>
+            <a href="search">Search</a>
+            <a href="chat-dash">Chat</a>
+        </nav>
+        <button class="menu-btn" aria-label="Open navigation">
+            <span class="bar bar1"></span>
+            <span class="bar bar2"></span>
+            <span class="bar bar3"></span>
+        </button>
+    </header>
+
+    <main class="dashboard-container">
+        <h1>Your chats</h1>
+        <div class="chat-list">
+            <% if (chats && chats.length > 0) { %>
+                <% chats.forEach(chat => { %>
+                    <a href="chat?id=<%= chat.id%>" style="text-decoration: none;">
+                        <div class="news-card">
+                            <div class="bloom"></div>
+                            <div class="news-card-content">
+                                <div class="title-row">
+                                    <h3 class="dynamic-title">Chat #<%= chat.id %></h3>
+                                </div>
+                                <p class="dynamic-content">
+                                    <% if (chat.messages && chat.messages.length > 0) { %>
+                                        <%= chat.messages[chat.messages.length - 1].content %>
+                                    <% } else { %>
+                                        No messages yet
+                                    <% } %>
+                                </p>
+                                <div class="date">
+                                    <% if (chat.messages && chat.messages.length > 0) { %>
+                                        <%= new Date(chat.messages[chat.messages.length - 1].createdAt).toLocaleDateString() %>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                <% }); %>
+            <% } else { %>
+                <div class="no-results">
+                    No chats found. Start a new conversation!
+                </div>
+            <% } %>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuBtn = document.querySelector('.header .menu-btn');
+            const navLinks = document.querySelector('.header .nav-links');
+            if (menuBtn && navLinks) {
+                menuBtn.addEventListener('click', function() {
+                    menuBtn.classList.toggle('open');
+                    navLinks.classList.toggle('open');
+                });
+            }
+
+            document.body.classList.add('loaded');
+        });
+    </script>
+</body>
+</html>

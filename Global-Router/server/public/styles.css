@@ -1442,3 +1442,22 @@ input[type="date"] {
         font-size: 1rem;
     }
 }
+
+.message-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.gray-message {
+    padding: 20px 200px 20px 0;
+    border-radius: 10px;
+    background-color: rgb(27, 15, 69);
+    border: 1px solid white;
+}
+
+.blue-message {
+    padding: 20px 0 20px 200px;
+    border-radius: 10px;
+    background-color: rgb(111, 111, 224);
+    border: 1px solid white;
+}
