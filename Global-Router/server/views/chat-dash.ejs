@@ -20,40 +20,48 @@
         </button>
     </header>
 
-    <main class="dashboard-container">
-        <h1>Your chats</h1>
-        <div class="chat-list">
+    <main>
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <h2>Your Chats</h2>
+                <div class="dashboard-actions">
+                    <a href="mk-chat" class="quick-post-btn">Start Chat</a>
+                </div>
+            </div>
             <% if (chats && chats.length > 0) { %>
-                <% chats.forEach(chat => { %>
-                    <a href="chat?id=<%= chat.id%>" style="text-decoration: none;">
-                        <div class="news-card">
-                            <div class="bloom"></div>
-                            <div class="news-card-content">
-                                <div class="title-row">
-                                    <h3 class="dynamic-title">Chat #<%= chat.id %></h3>
-                                </div>
-                                <p class="dynamic-content">
-                                    <% if (chat.messages && chat.messages.length > 0) { %>
-                                        <%= chat.messages[chat.messages.length - 1].content %>
-                                    <% } else { %>
-                                        No messages yet
-                                    <% } %>
-                                </p>
-                                <div class="date">
-                                    <% if (chat.messages && chat.messages.length > 0) { %>
-                                        <%= new Date(chat.messages[chat.messages.length - 1].createdAt).toLocaleDateString() %>
-                                    <% } %>
+                <div class="chat-list">
+                    <% chats.forEach(chat => { %>
+                        <a href="chat?id=<%= chat.id%>" style="text-decoration: none;">
+                            <div class="news-card">
+                                <div class="bloom"></div>
+                                <div class="news-card-content">
+                                    <div class="title-row">
+                                        <h3 class="dynamic-title">Chat #<%= chat.id %></h3>
+                                    </div>
+                                    <p class="dynamic-content">
+                                        <% if (chat.messages && chat.messages.length > 0) { %>
+                                            <%= chat.messages[chat.messages.length - 1].content %>
+                                        <% } else { %>
+                                            No messages yet
+                                        <% } %>
+                                    </p>
+                                    <div class="date">
+                                        <% if (chat.messages && chat.messages.length > 0) { %>
+                                            <%= new Date(chat.messages[chat.messages.length - 1].createdAt).toLocaleDateString() %>
+                                        <% } %>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </a>
-                <% }); %>
-            <% } else { %>
-                <div class="no-results">
-                    No chats found. Start a new conversation!
+                        </a>
+                    <% }); %>
                 </div>
             <% } %>
         </div>
+        <% if (!chats || chats.length === 0) { %>
+            <div class="no-results">
+                No chats found. Start a new conversation!
+            </div>
+        <% } %>
     </main>
 
     <script>

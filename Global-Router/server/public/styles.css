@@ -1317,7 +1317,6 @@ input[type="date"] {
     margin-top: 40px;
     padding: 20px;
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
     font-size: 1.1rem;
     line-height: 1.6;
     display: flex;

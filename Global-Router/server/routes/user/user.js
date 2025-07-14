@@ -362,4 +362,8 @@ router.get('/chat', async (req, res) => {
     }
 })
 
+router.get('/mk-chat', async (req, res) => {
+    res.render('mk-chat');
+})
+
 export default router;
