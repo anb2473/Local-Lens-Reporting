@@ -363,7 +363,9 @@ router.get('/chat', async (req, res) => {
 })
 
 router.get('/mk-chat', async (req, res) => {
-    res.render('mk-chat');
+    const users = await prisma.user.findMany();
+    console.log(Array.isArray(users), users);
+    res.render('mk-chat', { users });
 })
 
 export default router;

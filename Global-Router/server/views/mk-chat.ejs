@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Create Chat</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header class="header">
+        <h1 class="logo">Local Lens</h1>
+        <nav class="nav-links">
+            <a href="dashboard">Dashboard</a>
+            <a href="search">Search</a>
+            <a href="chat-dash">Chat</a>
+        </nav>
+        <button class="menu-btn" aria-label="Open navigation">
+            <span class="bar bar1"></span>
+            <span class="bar bar2"></span>
+            <span class="bar bar3"></span>
+        </button>
+    </header>
+
+    <main class="dashboard-container">
+        <div class="dashboard-header">
+            <h2>Create a New Chat</h2>
+        </div>
+        <form id="mkChatForm" method="POST" action="/mk-chat">
+            <div class="form-group">
+                <label for="chatName">Chat Name</label>
+                <input type="text" id="chatName" name="chatName" placeholder="Enter chat name" required>
+            </div>
+            <div class="form-group">
+                <label for="addUserInput">Add Participants</label>
+                <div class="autocomplete-container" style="width: 300px;">
+                    <input type="text" id="addUserInput" placeholder="Type user email..." autocomplete="off">
+                    <div class="autocomplete-results" id="autocompleteResults">
+                        <% users.forEach(user => { %>
+                            <div class="autocomplete-item" data-email="<%= user.email %>" style="display: none;">
+                                <%= user.email %>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+                <button type="button" id="addUserBtn" class="quick-post-btn" style="margin-top: 10px; padding: 0 18px;">+</button>
+            </div>
+            <div class="form-group">
+                <label>Participants</label>
+                <ul id="participantsList" style="list-style: none; padding: 0;"></ul>
+            </div>
+            <button type="submit" class="submit-btn">Create Chat</button>
+        </form>
+    </main>
+
+    <script>
+        // Header menu JS
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuBtn = document.querySelector('.header .menu-btn');
+            const navLinks = document.querySelector('.header .nav-links');
+            if (menuBtn && navLinks) {
+                menuBtn.addEventListener('click', function() {
+                    menuBtn.classList.toggle('open');
+                    navLinks.classList.toggle('open');
+                });
+            }
+            document.body.classList.add('loaded');
+        });
+
+        // Autocomplete logic (search.ejs pattern)
+        const addUserInput = document.getElementById('addUserInput');
+        const autocompleteResults = document.getElementById('autocompleteResults');
+        const autocompleteItems = autocompleteResults.querySelectorAll('.autocomplete-item');
+        const participantsList = document.getElementById('participantsList');
+        const addUserBtn = document.getElementById('addUserBtn');
+
+        function getCurrentParticipants() {
+            return Array.from(participantsList.querySelectorAll('li')).map(li => li.getAttribute('data-email'));
+        }
+
+        function updateAutocomplete() {
+            const searchTerm = addUserInput.value.toLowerCase();
+            const currentParticipants = getCurrentParticipants();
+            let visibleItems = 0;
+            autocompleteItems.forEach(item => {
+                const email = item.getAttribute('data-email');
+                const isVisible = email.toLowerCase().includes(searchTerm) && !currentParticipants.includes(email);
+                item.style.display = isVisible ? 'block' : 'none';
+                if (isVisible) visibleItems++;
+            });
+            autocompleteResults.classList.toggle('open', searchTerm.length > 0 && visibleItems > 0);
+        }
+
+        addUserInput.addEventListener('input', updateAutocomplete);
+
+        autocompleteResults.addEventListener('click', function(e) {
+            const item = e.target.closest('.autocomplete-item');
+            if (item && item.style.display !== 'none') {
+                addParticipant(item.getAttribute('data-email'));
+                addUserInput.value = '';
+                updateAutocomplete();
+                autocompleteResults.classList.remove('open');
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!addUserInput.contains(e.target) && !autocompleteResults.contains(e.target)) {
+                autocompleteResults.classList.remove('open');
+            }
+        });
+
+        function addParticipant(email) {
+            if (!getCurrentParticipants().includes(email)) {
+                const li = document.createElement('li');
+                li.setAttribute('data-email', email);
+                li.style.display = 'flex';
+                li.style.alignItems = 'center';
+                li.style.marginBottom = '8px';
+                li.innerHTML = `
+                    <span style="color: #fff; margin-right: 10px;">${email}</span>
+                    <button type="button" class="delete-btn" style="padding: 2px 10px; font-size: 1.2rem;" data-email="${email}">-</button>
+                `;
+                participantsList.appendChild(li);
+            }
+        }
+
+        addUserBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Find the first visible autocomplete item
+            const visibleItem = Array.from(autocompleteItems).find(item => item.style.display === 'block');
+            if (visibleItem) {
+                addParticipant(visibleItem.getAttribute('data-email'));
+                addUserInput.value = '';
+                updateAutocomplete();
+                autocompleteResults.classList.remove('open');
+            }
+        });
+
+        participantsList.addEventListener('click', function(e) {
+            if (e.target.classList.contains('delete-btn')) {
+                const email = e.target.getAttribute('data-email');
+                const li = participantsList.querySelector(`li[data-email="${email}"]`);
+                if (li) li.remove();
+                updateAutocomplete();
+            }
+        });
+
+        // On submit, add participants as hidden inputs
+        document.getElementById('mkChatForm').addEventListener('submit', function(e) {
+            // Remove any old hidden inputs
+            document.querySelectorAll('input[name="participants[]"]').forEach(el => el.remove());
+            getCurrentParticipants().forEach(email => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'participants[]';
+                input.value = email;
+                this.appendChild(input);
+            });
+        });
+    </script>
+</body>
+</html>
