@@ -21,20 +21,33 @@
     </header>
 
     <main class="dashboard-container">
-        <h1>Your chats</h1>
-        <div class="message-list">
-            <% if chat.messages { chat.messages.forEach(message => { %>
-                <% if message.userId === userId { %>
-                    <div class="blue-message">
-                        <% = message.content %>
-                    </div>
-                <% } else { %>
-                    <div class="gray-message">
-                        <% = message.content %>
-                    </div>
-                <% } %>
-            <% })} %>
-        </div>
+        <h1 style="color: white;"><%= chat.name %></h1>
+        <% if (chat && chat.messages && chat.messages.length > 0) { %>
+            <div class="message-list">
+                <% chat.messages.forEach(message => { %>
+                    <% if (message.userId === userId) { %>
+                        <div class="blue-message">
+                            <%= message.content %>
+                        </div>
+                    <% } else { %>
+                        <div class="gray-message">
+                            <%= message.content %>
+                        </div>
+                    <% } %>
+                <% }); %>
+            </div>
+        <% } %>
+        
+        <form method="POST" action="/user/chat" style="margin-top: 20px; display: flex; gap: 0; align-items: stretch;">
+            <input type="hidden" name="chatId" value="<%= chat.id %>">
+            <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                <input type="text" name="content" placeholder="Type your message..." required style="width: 100%; max-width: none; max-height: 40px; border-radius: 20px; border-right: none;">
+            </div>
+            <button type="submit" class="send-btn" title="Send Message">
+                <span class="send-icon">➤</span>
+                <span class="send-text">Send Message</span>
+            </button>
+        </form>
     </main>
 
     <script>
@@ -52,4 +65,5 @@
         });
     </script>
 </body>
+</html>
 </html>

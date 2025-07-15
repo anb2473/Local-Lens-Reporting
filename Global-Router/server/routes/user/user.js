@@ -348,24 +348,133 @@ router.get('/chat-dash', async (req, res) => {
 
 router.get('/chat', async (req, res) => {
     try {
-        const chatId = req.query.id;
-        const chat = prisma.chats.findFirst({
+        const chatId = parseInt(req.query.id);
+        const chat = await prisma.chat.findFirst({
             where: {
                 id: chatId,
+            },
+            include: {
+                messages: {
+                    include: {
+                        owner: true
+                    },
+                    orderBy: {
+                        createdAt: 'asc'
+                    }
+                },
+                participants: true
             }
-        })
+        });
 
-        res.render('chat', {chat: chat, userId: req.query.userId})
+        if (!chat) {
+            return res.status(404).send('Chat not found');
+        }
+
+        res.render('chat', { chat: chat, userId: req.userID });
     } catch (error) {
-        console.error('Error fetching chat dashboard:', error);
-        res.status(500).send('Error fetching chat dashboard');
+        console.error('Error fetching chat:', error);
+        res.status(500).send('Error fetching chat');
+    }
+})
+
+router.post('/chat', async (req, res) => {
+    try {
+        const { chatId, content } = req.body;
+        
+        if (!chatId || !content) {
+            return res.status(400).send('Chat ID and content are required');
+        }
+
+        // Verify the chat exists and user is a participant
+        const chat = await prisma.chat.findFirst({
+            where: {
+                id: parseInt(chatId),
+                participants: {
+                    some: {
+                        id: req.userID
+                    }
+                }
+            }
+        });
+
+        if (!chat) {
+            return res.status(404).send('Chat not found or unauthorized');
+        }
+
+        // Create the message
+        const message = await prisma.message.create({
+            data: {
+                content: content,
+                chatId: parseInt(chatId),
+                userId: req.userID
+            }
+        });
+
+        // Redirect back to the chat
+        res.redirect(`/user/chat?id=${chatId}`);
+    } catch (error) {
+        console.error('Error posting chat:', error);
+        res.status(500).send('Error posting chat');
     }
 })
 
 router.get('/mk-chat', async (req, res) => {
-    const users = await prisma.user.findMany();
-    console.log(Array.isArray(users), users);
+    const users = await prisma.user.findMany({
+        where: {
+            id: {
+                not: req.userID
+            }
+        }
+    });
     res.render('mk-chat', { users });
+})
+
+router.post('/mk-chat', async (req, res) => {
+    const { chatName, participants } = req.body;
+    
+    try {
+        // Validate input
+        if (!chatName || !participants || !Array.isArray(participants) || participants.length === 0) {
+            return res.status(400).send('Chat name and at least one participant are required');
+        }
+
+        // Get user IDs for participants (including current user)
+        const participantEmails = [...participants, req.userID];
+        const users = await prisma.user.findMany({
+            where: {
+                email: {
+                    in: participants
+                }
+            }
+        });
+
+        // Add current user to participants
+        const currentUser = await prisma.user.findUnique({
+            where: { id: req.userID }
+        });
+
+        if (!currentUser) {
+            return res.status(404).send('Current user not found');
+        }
+
+        const allParticipants = [...users, currentUser];
+
+        // Create the chat
+        const chat = await prisma.chat.create({
+            data: {
+                name: chatName,
+                participants: {
+                    connect: allParticipants.map(user => ({ id: user.id }))
+                }
+            }
+        });
+
+        // Redirect to the chat dashboard
+        res.redirect('/user/chat-dash');
+    } catch (error) {
+        console.error('Error creating chat:', error);
+        res.status(500).send('Error creating chat');
+    }
 })
 
 export default router;
