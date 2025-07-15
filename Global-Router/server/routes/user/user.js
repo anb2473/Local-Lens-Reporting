@@ -330,7 +330,17 @@ router.get('/chat-dash', async (req, res) => {
                         createdAt: 'desc'
                     }
                 },
-                chats: true,
+                chats: {
+                    include: {
+                        participants: true,
+                        messages: {
+                            orderBy: {
+                                createdAt: 'desc'
+                            },
+                            take: 1
+                        }
+                    }
+                },
             },
         });
 

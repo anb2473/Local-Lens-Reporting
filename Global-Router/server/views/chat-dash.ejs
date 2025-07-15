@@ -36,13 +36,14 @@
                                 <div class="bloom"></div>
                                 <div class="news-card-content">
                                     <div class="title-row">
-                                        <h3 class="dynamic-title">Chat #<%= chat.id %></h3>
+                                        <h3 class="dynamic-title"><%= chat.name %></h3>
                                     </div>
                                     <p class="dynamic-content">
-                                        <% if (chat.messages && chat.messages.length > 0) { %>
-                                            <%= chat.messages[chat.messages.length - 1].content %>
+                                        <% if (chat.participants && chat.participants.length > 0) { %>
+                                            <% const participantNames = chat.participants.map(p => p.fname).join(', '); %>
+                                            Participants: <%= participantNames %>
                                         <% } else { %>
-                                            No messages yet
+                                            No participants
                                         <% } %>
                                     </p>
                                     <div class="date">
