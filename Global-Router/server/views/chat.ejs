@@ -21,7 +21,19 @@
     </header>
 
     <main class="dashboard-container">
-        <h1 style="color: white;"><%= chat.name %></h1>
+        <div class="dashboard-header">
+            <h2 style="color: white;"><%= chat.name %></h2>
+            <div class="dashboard-actions">
+                <span style="color: #888; font-size: 0.9rem;">
+                    <% if (chat.participants && chat.participants.length > 0) { %>
+                        <% const participantNames = chat.participants.map(p => p.fname).join(', '); %>
+                        <% if (participantNames) { %>
+                            Participants: <%= participantNames %>
+                        <% } %>
+                    <% } %>
+                </span>
+            </div>
+        </div>
         <% if (chat && chat.messages && chat.messages.length > 0) { %>
             <div class="message-list">
                 <% chat.messages.forEach(message => { %>
