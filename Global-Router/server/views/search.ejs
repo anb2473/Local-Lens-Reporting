@@ -94,8 +94,9 @@
                     <% }); %>
                 </div>
             <% } else { %>
-                <div class="no-results">
-                    No news found for this region at this date.
+                <div class="no-posts">
+                    <p>No news found for this region at this date.</p>
+                    <a href="post?r=<%= query || '' %>" class="create-post-btn">Create a Post</a>
                 </div>
             <% } %>
         <% } %>

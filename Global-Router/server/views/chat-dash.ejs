@@ -59,8 +59,9 @@
             <% } %>
         </div>
         <% if (!chats || chats.length === 0) { %>
-            <div class="no-results">
-                No chats found. Start a new conversation!
+            <div class="no-posts">
+                <p>No chats found. Start a new conversation!</p>
+                <a href="mk-chat" class="create-post-btn">Start a New Chat</a>
             </div>
         <% } %>
     </main>
