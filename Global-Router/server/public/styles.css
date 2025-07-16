@@ -624,7 +624,7 @@ img {
 .search-bar button {
     border: 0;
     border-radius: 50%;
-    width: 70px;
+    width: 90px;
     height: 60px;
     background: rgba(88, 98, 155, 0.7);
     cursor: pointer;
@@ -1332,7 +1332,7 @@ input[type="date"] {
 }
 
 .no-results::before {
-    content: "🔍";
+    content: "🔍︎";
     font-size: 2.5rem;
     margin-bottom: 12px;
 }

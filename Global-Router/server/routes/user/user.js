@@ -68,6 +68,13 @@ router.post('/post', async (req, res) => {
 
     let jwt;
     try {
+        // --- Name scanner start ---
+        const allUsers = await prisma.user.findMany({ select: { id: true, fname: true, lname: true, email: true } });
+        const referencedUsers = allUsers.filter(user => {
+            const fullName = `${user.fname} ${user.lname}`.toLowerCase();
+            return content.toLowerCase().includes(fullName);
+        });
+
         const jwt_res = await fetch('http://validity-ai-server-service:8000/auth/login', {
             method: 'POST',
             headers: {
@@ -102,7 +109,7 @@ router.post('/post', async (req, res) => {
         }
 
         // Now verify title
-        let titleRes = await fetch(`http://validity-ai-server-service:8000/api/ta?claim=${title.replaceAll(" ", "-")}`, {
+        let titleRes = await fetch(`http://validity-ai-server-service:8000/api/ta?claim=${title.replaceAll(" ", "-")}` , {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -112,7 +119,7 @@ router.post('/post', async (req, res) => {
         let titleVerification = await titleRes.json();
 
         // Now verify content
-        let contentRes = await fetch(`http://validity-ai-server-service:8000/api/ta?claim=${content.replaceAll(" ", "-")}`, {
+        let contentRes = await fetch(`http://validity-ai-server-service:8000/api/ta?claim=${content.replaceAll(" ", "-")}` , {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -144,6 +151,7 @@ router.post('/post', async (req, res) => {
                 titleReliability: titleVerification,
                 contentReliability: contentVerification,
                 averagePlausability: Math.floor(averagePlausibility * 100),
+                referencedUsers: referencedUsers,
             },
         });
         res.redirect(`/user/search?q=${regionName}`);

@@ -38,6 +38,29 @@
                             }) %>
                         </div>
                     </div>
+                    <% if (news.referencedUsers && news.referencedUsers.length > 0) { %>
+                        <div class="referenced-users-list" style="margin-top: 1.5rem;">
+                            <strong>Referenced People:</strong>
+                            <ul id="referencedUsersUl" style="list-style: none; padding: 0; margin: 0;"
+                                data-referenced='<%- JSON.stringify(news.referencedUsers) %>'>
+                                <% news.referencedUsers.slice(0, 3).forEach(function(ref) { %>
+                                    <li style="margin-bottom: 0.5rem;">
+                                        <span style="font-weight: 500; color: #fff; background: #23272f; border-radius: 8px; padding: 4px 10px; margin-right: 8px;">
+                                            <%= ref.fname %> <%= ref.lname %>
+                                        </span>
+                                        <% if (ref.status) { %>
+                                            <span style="color: #888; font-size: 0.95em;">[
+                                                <%= ref.status.charAt(0).toUpperCase() + ref.status.slice(1) %>
+                                            ]</span>
+                                        <% } %>
+                                    </li>
+                                <% }); %>
+                            </ul>
+                            <% if (news.referencedUsers.length > 3) { %>
+                                <button id="expandReferencesBtn" class="submit-btn" style="margin-top: 0.5rem; font-size: 0.95em; padding: 4px 16px;">Show All</button>
+                            <% } %>
+                        </div>
+                    <% } %>
                 </header>
 
                 <div class="article-content">
@@ -61,8 +84,20 @@
                     navLinks.classList.toggle('open');
                 });
             }
-
             document.body.classList.add('loaded');
+
+            // Expand/collapse referenced users
+            const expandBtn = document.getElementById('expandReferencesBtn');
+            const ul = document.getElementById('referencedUsersUl');
+            if (expandBtn && ul) {
+                const referencedUsers = JSON.parse(ul.getAttribute('data-referenced'));
+                expandBtn.addEventListener('click', function() {
+                    ul.innerHTML = referencedUsers.map(ref =>
+                        `<li style="margin-bottom: 0.5rem;"><span style=\"font-weight: 500; color: #fff; background: #23272f; border-radius: 8px; padding: 4px 10px; margin-right: 8px;\">${ref.fname} ${ref.lname}</span> ${ref.status ? `<span style=\"color: #888; font-size: 0.95em;\">[${ref.status.charAt(0).toUpperCase() + ref.status.slice(1)}]</span>` : ''}</li>`
+                    ).join('');
+                    expandBtn.style.display = 'none';
+                });
+            }
         });
     </script>
 </body>
