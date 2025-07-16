@@ -1548,3 +1548,45 @@ input[type="date"] {
 .send-btn:hover .send-icon {
     transform: rotate(-45deg);
 }
+
+.referenced-users-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.referenced-user-pill {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, #ff8177 0%, #ffb199 100%);
+    color: #23272f;
+    border: none;
+    border-radius: 999px;
+    padding: 6px 18px;
+    margin: 0 6px 6px 0;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(255,129,119,0.10);
+    transition: background 0.2s, transform 0.15s;
+    outline: none;
+    text-align: left;
+}
+.referenced-user-pill:hover, .referenced-user-pill:focus {
+    background: linear-gradient(135deg, #b721ff 0%, #21d4fd 100%);
+    color: #fff;
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 4px 16px rgba(183,33,255,0.15);
+}
+.referenced-user-name {
+    font-weight: 600;
+    margin-right: 8px;
+    color: #fff !important;
+}
+.referenced-user-status {
+    color: #888;
+    font-size: 0.95em;
+    margin-left: 2px;
+}

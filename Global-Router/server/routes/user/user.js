@@ -437,6 +437,7 @@ router.post('/chat', async (req, res) => {
 })
 
 router.get('/mk-chat', async (req, res) => {
+    // Always get all users except the current user
     const users = await prisma.user.findMany({
         where: {
             id: {
@@ -444,7 +445,19 @@ router.get('/mk-chat', async (req, res) => {
             }
         }
     });
-    res.render('mk-chat', { users });
+    // Support pre-selecting participants by ID via query param
+    let preselectedUsers = [];
+    if (req.query.participants) {
+        const ids = req.query.participants.split(',').map(id => parseInt(id)).filter(id => !isNaN(id));
+        if (ids.length > 0) {
+            preselectedUsers = await prisma.user.findMany({
+                where: {
+                    id: { in: ids }
+                }
+            });
+        }
+    }
+    res.render('mk-chat', { users, preselectedUsers });
 })
 
 router.post('/mk-chat', async (req, res) => {

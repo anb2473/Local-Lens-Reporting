@@ -45,7 +45,16 @@
             </div>
             <div class="form-group">
                 <label>Participants</label>
-                <ul id="participantsList" style="list-style: none; padding: 0;"></ul>
+                <ul id="participantsList" style="list-style: none; padding: 0;">
+                    <% if (typeof preselectedUsers !== 'undefined' && preselectedUsers.length > 0) { %>
+                        <% preselectedUsers.forEach(function(user) { %>
+                            <li data-email="<%= user.email %>" style="display: flex; align-items: center; margin-bottom: 8px;">
+                                <span style="color: #fff; margin-right: 10px;"><%= user.email %></span>
+                                <button type="button" class="delete-btn" style="padding: 2px 10px; font-size: 1.2rem;" data-email="<%= user.email %>">-</button>
+                            </li>
+                        <% }); %>
+                    <% } %>
+                </ul>
             </div>
             <button type="submit" class="submit-btn">Create Chat</button>
         </form>
