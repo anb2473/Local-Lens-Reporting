@@ -61,7 +61,7 @@ model Region {
   news      News[]
 }
 
-// THIS IP LOG SYSTEM HAS BEEN DEPRECIATED IN FAVOR OF EXTERNAL RAATE LIMITNG FOR SECURITY
+// THIS IP LOG SYSTEM HAS BEEN DEPRECIATED IN FAVOR OF EXTERNAL RATE LIMITNG FOR SECURITY
 model IpLog {
   id          Int      @id @default(autoincrement())
   ip          String   @unique

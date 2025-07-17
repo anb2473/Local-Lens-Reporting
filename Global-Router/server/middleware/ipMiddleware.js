@@ -1,4 +1,5 @@
 import prisma from '../prismaClient.js';
+import logger from '../logger.js';
 
 // THIS IP TRACKER IS DEPRECIATED IN FAVOR OF EXTERNAL RATE LIMITING FOR SECURITY
 
@@ -7,6 +8,8 @@ const getIp = (req) => {
 };
 
 export const trackIp = async (req, res, next) => {
+    logger.warn("The IP middleware has been depreciated in favor of external rate limiting for security")
+
     const ip = getIp(req);
     
     // Track IP usage
@@ -40,6 +43,8 @@ export const trackIp = async (req, res, next) => {
 };
 
 export const banIp = async (ip) => {
+    logger.warn("The IP middleware has been deprecated in favor of external rate limiting for security");
+    
     await prisma.ipLog.upsert({
         where: { ip },
         update: {
