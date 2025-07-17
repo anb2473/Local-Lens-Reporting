@@ -169,6 +169,15 @@ router.get('/news', async (req, res) => {
     try {
         const news = await prisma.news.findUnique({
             where: { id: parseInt(newsId) },
+            include: {
+                user: {
+                    select: {
+                        fname: true,
+                        lname: true,
+                        email: true
+                    }
+                }
+            }
         });
 
         if (!news) {

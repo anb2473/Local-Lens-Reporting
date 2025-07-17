@@ -37,6 +37,11 @@
                                 day: 'numeric' 
                             }) %>
                         </div>
+                        <% if (news.user) { %>
+                            <div class="article-creator">
+                                <a href="mailto:<%= news.user.email %>" class="creator-link"><%= news.user.fname %> <%= news.user.lname %></a>
+                            </div>
+                        <% } %>
                     </div>
                     <% if (news.referencedUsers && news.referencedUsers.length > 0) { %>
                         <div class="referenced-users-list" style="margin-top: 1.5rem; text-align: left;">
