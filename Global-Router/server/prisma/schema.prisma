@@ -56,7 +56,7 @@ model News {
 
 model Region {
   id        Int       @id @default(autoincrement())
-  name      String
+  name      String    @unique
   users     User[]
   news      News[]
 }
