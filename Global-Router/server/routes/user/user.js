@@ -3,7 +3,6 @@ import prisma from '../../prismaClient.js';
 import {fileURLToPath} from 'url';
 import path, {dirname} from 'path';
 import sanitizer from 'sanitizer';
-// import {fetch, CookieJar} from 'node-fetch-cookies'
 
 const router = express.Router();
 
@@ -12,7 +11,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.join(__filename, '..', '..', '..');
 
 router.get('/search', async (req, res) => {
-    const query = req.query.q || '';
+    const query = sanitizer.sanitize(req.query.q) || '';
     const selectedDate = req.query.date || new Date().toISOString().split('T')[0];
     
     try {
@@ -66,8 +65,8 @@ router.get('/post', async (req, res) => {
 
 router.post('/post', async (req, res) => {
     // One-liner: destructure and sanitize title and content
-    let title = sanitizer.sanitize(req.body.title, 'string');
-    let content = sanitizer.sanitize(req.body.content, 'string');
+    let title = sanitizer.sanitize(req.body.title);
+    let content = sanitizer.sanitize(req.body.content);
 
     let jwt;
     try {
@@ -165,10 +164,11 @@ router.post('/post', async (req, res) => {
 });
 
 router.get('/news', async (req, res) => {
-    const newsId = req.query.news;
-    if (!newsId) {
-        return res.status(400).send('News ID is required');
+    const newsId = parseInt(req.body.news);
+    if (newsId.isNaN) {
+        res.status(400).send('Invalid post ID')
     }
+    
     try {
         const news = await prisma.news.findUnique({
             where: { id: parseInt(newsId) },
@@ -222,13 +222,18 @@ router.get('/dashboard', async (req, res) => {
 });
 
 router.post('/edit-post', async (req, res) => {
-    const { postId, title, content } = req.body;
+    const postId = parseInt(req.body.postId);
+    if (postId.isNaN) {
+        res.status(400).send('Invalid post ID')
+    }
+    const title = sanitizer.sanitize(req.body.title);
+    const content = sanitizer.sanitize(req.body.content);
     
     try {
         // Verify the post belongs to the current user
         const post = await prisma.news.findFirst({
             where: {
-                id: parseInt(postId),
+                id: postId,
                 userId: req.userID
             }
         });
@@ -310,13 +315,16 @@ router.post('/edit-post', async (req, res) => {
 });
 
 router.post('/delete-post', async (req, res) => {
-    const { postId } = req.body;
+    const postId = parseInt(req.body.postId);
+    if (postId.isNaN) {
+        res.status(400).send('Invalid post ID')
+    }
     
     try {
         // Verify the post belongs to the current user
         const post = await prisma.news.findFirst({
             where: {
-                id: parseInt(postId),
+                id: postId,
                 userId: req.userID
             }
         });
@@ -409,8 +417,12 @@ router.get('/chat', async (req, res) => {
 
 router.post('/chat', async (req, res) => {
     try {
-        const { chatId, content } = req.body;
-        
+        const chatId = parseInt(req.body.chatId);
+        if (chatId.isNaN) {
+            res.status(400).send('Invalid post ID')
+        }
+        const content = sanitizer.sanitize(req.body.content)
+
         if (!chatId || !content) {
             return res.status(400).send('Chat ID and content are required');
         }
