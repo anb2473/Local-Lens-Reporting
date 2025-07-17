@@ -8,8 +8,8 @@ import auth from './routes/auth/auth.js';
 import user from './routes/user/user.js';
 import authMiddleware from './middleware/authMiddleware.js';
 import rateLimit from 'express-rate-limit';
-import ejs from 'ejs';
 import prisma from './prismaClient.js';
+import logger from './logger.js'; // adjust path as needed
 
 const app = express();
 
@@ -64,7 +64,7 @@ app.get('/sign-up', async (req, res) => {
         const regions = await prisma.region.findMany();
         res.render('sign-up', { regions });
     } catch (error) {
-        console.error('Error fetching regions:', error);
+        logger.error('Error fetching regions:', error);
         res.status(500).json({ error: 'Failed to fetch regions' });
     }
 })
@@ -73,5 +73,5 @@ app.use('/auth', auth);                  // Use the auth routes
 app.use('/user', authMiddleware, user)   // Link the auth middleware for requests to the user endpoints
 
 app.listen(PORT, () => {
-    console.log(`Server active at http://127.0.0.1:${PORT}`);
+    logger.info(`Server active at http://127.0.0.1:${PORT}`);
 });

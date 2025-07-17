@@ -3,6 +3,7 @@ import prisma from '../../prismaClient.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import sanitizer from 'sanitizer';
+import logger from '../../logger.js';
 
 const router = express.Router();
 const SALT_ROUNDS = 10;
@@ -131,7 +132,7 @@ router.post('/sign-up', async (req, res) => {
 
         return res.status(201).json({ message: 'User created successfully' });
     } catch (err) {
-        console.log(err);
+        logger.error(err);
         return res.status(500).json({ err: 'Internal server error' });
     }
 });

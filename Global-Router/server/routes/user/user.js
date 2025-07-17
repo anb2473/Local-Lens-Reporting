@@ -1,8 +1,9 @@
 import express from 'express';
 import prisma from '../../prismaClient.js';
 import {fileURLToPath} from 'url';
-import path, {dirname} from 'path';
+import path from 'path';
 import sanitizer from 'sanitizer';
+import logger from '../../logger.js';
 
 const router = express.Router();
 
@@ -11,10 +12,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.join(__filename, '..', '..', '..');
 
 router.get('/search', async (req, res) => {
-    const query = sanitizer.sanitize(req.query.q) || '';
-    const selectedDate = req.query.date || new Date().toISOString().split('T')[0];
-    
     try {
+        const query = sanitizer.sanitize(req.query.q) || '';
+        const selectedDate = req.query.date || new Date().toISOString().split('T')[0];
+
         const region = await prisma.region.findFirst({
             where: { name: query },
             include: {
@@ -43,7 +44,7 @@ router.get('/search', async (req, res) => {
             news: region?.news || []
         });
     } catch (error) {
-        console.error('Error fetching region:', error);
+        logger.error('Error fetching region:', error);
         const regions = await prisma.region.findMany({
             select: {
                 name: true,
@@ -60,16 +61,15 @@ router.get('/search', async (req, res) => {
 });
 
 router.get('/post', async (req, res) => {
-    res.render('post', { region: req.query.r || '' });
+    return res.render('post', { region: req.query.r || '' });
 });
 
 router.post('/post', async (req, res) => {
-    // One-liner: destructure and sanitize title and content
-    let title = sanitizer.sanitize(req.body.title);
-    let content = sanitizer.sanitize(req.body.content);
-
-    let jwt;
     try {
+        let title = sanitizer.sanitize(req.body.title);
+        let content = sanitizer.sanitize(req.body.content);
+    
+        let jwt;
         // Scan text for any user references
         const allUsers = await prisma.user.findMany({ select: { id: true, fname: true, lname: true, email: true } });
         const referencedUsers = allUsers.filter(user => {
@@ -88,7 +88,7 @@ router.post('/post', async (req, res) => {
         });
 
         if (!jwt_res.ok) {
-            console.error('Failed to authenticate with AI server');
+            logger.error('Failed to authenticate with AI server');
             return res.status(500).send('Failed to authenticate with AI server');
         }
 
@@ -106,7 +106,7 @@ router.post('/post', async (req, res) => {
         }
 
         if (!jwt) {
-            console.error('No JWT found in response');
+            logger.error('No JWT found in response');
             return res.status(500).send('Failed to get JWT from AI server');
         }
 
@@ -158,13 +158,13 @@ router.post('/post', async (req, res) => {
         });
         res.redirect(`/user/search?q=${regionName}`);
     } catch (error) {
-        console.error('Error in /post:', error);
+        logger.error('Error in /post:', error);
         res.status(500).send('Error processing post');
     }
 });
 
 router.get('/news', async (req, res) => {
-    const newsId = parseInt(req.body.news);
+    const newsId = parseInt(req.query.news);
     if (newsId.isNaN) {
         res.status(400).send('Invalid post ID')
     }
@@ -189,7 +189,7 @@ router.get('/news', async (req, res) => {
 
         res.render('news', { news });
     } catch (error) {
-        console.error('Error fetching news:', error);
+        logger.error('Error fetching news:', error);
         res.status(500).send('Error fetching news');
     }
 })
@@ -216,7 +216,7 @@ router.get('/dashboard', async (req, res) => {
 
         res.render('dash', { user });
     } catch (error) {
-        console.error('Error fetching user dashboard:', error);
+        logger.error('Error fetching user dashboard:', error);
         res.status(500).send('Error fetching dashboard');
     }
 });
@@ -309,7 +309,7 @@ router.post('/edit-post', async (req, res) => {
 
         res.status(200).send('Post updated successfully');
     } catch (error) {
-        console.error('Error updating post:', error);
+        logger.error('Error updating post:', error);
         res.status(500).send('Error updating post');
     }
 });
@@ -340,7 +340,7 @@ router.post('/delete-post', async (req, res) => {
 
         res.status(200).send('Post deleted successfully');
     } catch (error) {
-        console.error('Error deleting post:', error);
+        logger.error('Error deleting post:', error);
         res.status(500).send('Error deleting post');
     }
 });
@@ -379,7 +379,7 @@ router.get('/chat-dash', async (req, res) => {
         const chats = user.chats || [];
         res.render('chat-dash', { chats: chats })
     } catch (error) {
-        console.error('Error fetching chat dashboard:', error);
+        logger.error('Error fetching chat dashboard:', error);
         res.status(500).send('Error fetching chat dashboard');
     }
 })
@@ -410,7 +410,7 @@ router.get('/chat', async (req, res) => {
 
         res.render('chat', { chat: chat, userId: req.userID });
     } catch (error) {
-        console.error('Error fetching chat:', error);
+        logger.error('Error fetching chat:', error);
         res.status(500).send('Error fetching chat');
     }
 })
@@ -455,7 +455,7 @@ router.post('/chat', async (req, res) => {
         // Redirect back to the chat
         res.redirect(`/user/chat?id=${chatId}`);
     } catch (error) {
-        console.error('Error posting chat:', error);
+        logger.error('Error posting chat:', error);
         res.status(500).send('Error posting chat');
     }
 })
@@ -527,7 +527,7 @@ router.post('/mk-chat', async (req, res) => {
         // Redirect to the chat dashboard
         res.redirect('/user/chat-dash');
     } catch (error) {
-        console.error('Error creating chat:', error);
+        logger.error('Error creating chat:', error);
         res.status(500).send('Error creating chat');
     }
 })
