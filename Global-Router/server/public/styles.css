@@ -1602,3 +1602,89 @@ input[type="date"] {
     text-decoration: underline;
     color: #ffb199;
 }
+
+/* User settings section styling for dashboard */
+.user-settings-section.dashboard-card {
+    background: #181818;
+    border-radius: 12px;
+    padding: 2rem 2.5rem 1.5rem 2.5rem;
+    margin: 2rem auto 2.5rem auto;
+    box-shadow: 0 2px 16px 0 rgba(0,0,0,0.12);
+    max-width: 480px;
+    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+.user-settings-section .form-group label {
+    color: #fff;
+    font-weight: 500;
+}
+.user-settings-section .form-group input[type="text"] {
+    background: #222;
+    color: #fff;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-top: 4px;
+    margin-bottom: 12px;
+    width: 100%;
+    font-size: 1rem;
+}
+.user-settings-section .submit-btn {
+    margin-top: 0.5rem;
+    width: 100%;
+}
+@media (max-width: 600px) {
+    .user-settings-section.dashboard-card {
+        padding: 1rem 0.5rem 1rem 0.5rem;
+        max-width: 98vw;
+    }
+}
+
+/* User settings feedback messages */
+.settings-message-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+    min-height: 36px;
+}
+.settings-success-message, .settings-error-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    max-width: 90vw;
+    padding: 0.5rem 1.5rem;
+    border-radius: 999px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.10);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s cubic-bezier(.68,-0.55,.27,1.55);
+    margin: 0.25rem 0;
+}
+.settings-success-message {
+    background: linear-gradient(90deg, #4caf50 60%, #43e97b 100%);
+    color: #fff;
+    opacity: 1;
+    pointer-events: auto;
+}
+.settings-error-message {
+    background: linear-gradient(90deg, #ff8177 60%, #ffb199 100%);
+    color: #fff;
+    opacity: 1;
+    pointer-events: auto;
+}
+.settings-icon {
+    font-size: 1.3em;
+    margin-right: 0.5em;
+    vertical-align: middle;
+}
+.settings-success-message[style*="display: none"],
+.settings-error-message[style*="display: none"] {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}

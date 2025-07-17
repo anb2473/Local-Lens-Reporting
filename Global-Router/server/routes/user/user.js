@@ -517,4 +517,21 @@ router.post('/mk-chat', async (req, res) => {
     }
 })
 
+router.post('/update-profile', async (req, res) => {
+    try {
+        const { fname, lname } = req.body;
+        if (!fname || !lname) {
+            return res.status(400).json({ error: 'First and last name are required' });
+        }
+        const updated = await prisma.user.update({
+            where: { id: req.userID },
+            data: { fname, lname }
+        });
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Error updating profile:', err);
+        res.status(500).json({ error: 'Failed to update profile' });
+    }
+});
+
 export default router;

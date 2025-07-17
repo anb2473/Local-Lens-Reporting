@@ -21,6 +21,24 @@
     </header>
 
     <main class="dashboard-container">
+        <section class="user-settings-section dashboard-card">
+            <h2 style="margin-bottom: 1rem; font-size: 1.3rem; color: #ff8177;">Account Settings</h2>
+            <form id="user-settings-form">
+                <div class="form-group">
+                    <label for="fname">First Name:</label>
+                    <input type="text" id="fname" name="fname" value="<%= user.fname %>" required>
+                </div>
+                <div class="form-group">
+                    <label for="lname">Last Name:</label>
+                    <input type="text" id="lname" name="lname" value="<%= user.lname %>" required>
+                </div>
+                <button type="submit" class="submit-btn">Save Changes</button>
+                <div class="settings-message-container">
+                    <div id="settings-success" class="settings-success-message" style="display: none;"><span class="settings-icon">✔</span> Saved!</div>
+                    <div id="settings-error" class="settings-error-message" style="display: none;"><span class="settings-icon">⚠</span> <span id="settings-error-text"></span></div>
+                </div>
+            </form>
+        </section>
         <div class="dashboard-header">
             <h2>Your Posts</h2>
             <div class="dashboard-actions">
@@ -184,6 +202,43 @@
             } catch (error) {
                 alert('Error deleting post');
             }
+        }
+
+        // User settings form AJAX
+        const userSettingsForm = document.getElementById('user-settings-form');
+        if (userSettingsForm) {
+            userSettingsForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const fname = document.getElementById('fname').value.trim();
+                const lname = document.getElementById('lname').value.trim();
+                const successMsg = document.getElementById('settings-success');
+                const errorMsg = document.getElementById('settings-error');
+                const errorText = document.getElementById('settings-error-text');
+                successMsg.style.display = 'none';
+                errorMsg.style.display = 'none';
+                errorText.textContent = '';
+                try {
+                    const res = await fetch('/user/update-profile', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ fname, lname })
+                    });
+                    if (res.ok) {
+                        successMsg.style.display = 'flex';
+                        errorMsg.style.display = 'none';
+                        setTimeout(() => { successMsg.style.display = 'none'; }, 2000);
+                    } else {
+                        const data = await res.json();
+                        errorText.textContent = data.error || 'Failed to update profile';
+                        errorMsg.style.display = 'flex';
+                        successMsg.style.display = 'none';
+                    }
+                } catch (err) {
+                    errorText.textContent = 'Error updating profile';
+                    errorMsg.style.display = 'flex';
+                    successMsg.style.display = 'none';
+                }
+            });
         }
 
         document.addEventListener('DOMContentLoaded', function() {
