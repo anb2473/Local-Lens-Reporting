@@ -1,19 +1,19 @@
 import jwt from 'jsonwebtoken';
 
 function authMiddleware(req, res, next) {
-    const token = req.cookies.jwt
+    const token = req.cookies.jwt;
 
     if (!token) {
-        return res.status(403).json({message: 'No token provided'});
+        return res.redirect('/login');
     }
 
     jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
         if (err) {
-            return res.status(401).json({message: 'Unauthorized'});
+            return res.redirect('/login');
         }
-        req.userID = decoded.userId; // Set user id to request object
-        next(); // Call next middleware or route handler
-    })
+        req.userID = decoded.userId;
+        next(); // Route user to user pages
+    });
 }
 
 export default authMiddleware;
