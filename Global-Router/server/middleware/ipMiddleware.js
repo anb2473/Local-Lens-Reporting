@@ -1,5 +1,7 @@
 import prisma from '../prismaClient.js';
 
+// THIS IP TRACKER IS DEPRECIATED IN FAVOR OF EXTERNAL RATE LIMITING FOR SECURITY
+
 const getIp = (req) => {
     return req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 };

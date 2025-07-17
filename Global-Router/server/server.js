@@ -69,7 +69,13 @@ app.get('/sign-up', async (req, res) => {
     }
 })
 
-app.use('/auth', auth);                  // Use the auth routes
+app.get('/logout', (req, res) => {
+    res.clearCookie('jwt');
+    res.redirect('/login')
+    return;
+});
+
+app.use('/auth', authRateLimiter, auth);                  // Use the auth routes
 app.use('/user', authMiddleware, user)   // Link the auth middleware for requests to the user endpoints
 
 app.listen(PORT, () => {
