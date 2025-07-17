@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken';
 
+const JWT_SECRET = process.env.SECRET_KEY
+
 function authMiddleware(req, res, next) {
     const token = req.cookies.jwt;
 
@@ -7,7 +9,7 @@ function authMiddleware(req, res, next) {
         return res.redirect('/login');
     }
 
-    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+    jwt.verify(token, JWT_SECRET, (err, decoded) => {
         if (err) {
             return res.redirect('/login');
         }

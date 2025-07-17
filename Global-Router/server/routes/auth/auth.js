@@ -5,12 +5,12 @@ import jwt from 'jsonwebtoken';
 import sanitizer from 'sanitizer';
 import logger from '../../logger.js';
 import validator from 'validator';
-
 const router = express.Router();
 
 const SALT_ROUNDS = 10;
 const maxJWTAge = 24 * 60 * 60 * 1000; // 24 hrs in ms
 const minPasswLen = 6;
+const JWT_SECRET = process.env.SECRET_KEY;
 
 // Set function aliases for readability
 const isValid = validator.isEmail;
@@ -49,7 +49,7 @@ router.post('/login', async (req, res) => {
         // Generate JWT token
         const token = genJWT(
             { userId: user.id, email: user.email },
-            process.env.SECRET_KEY,
+            JWT_SECRET,
             { expiresIn: '24h' }
         );
 
@@ -151,7 +151,7 @@ router.post('/sign-up', async (req, res) => {
         // Generate JWT token for new user
         const token = genJWT(
             { userId: newUser.id, email: newUser.email },
-            process.env.SECRET_KEY,
+            JWT_SECRET,
             { expiresIn: '24h' }
         );
 
