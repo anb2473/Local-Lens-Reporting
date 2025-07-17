@@ -2,13 +2,22 @@ import express from 'express';
 import prisma from '../../prismaClient.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import sanitizer from 'sanitizer';
 
 const router = express.Router();
 const SALT_ROUNDS = 10;
 
 // LOGIN
 router.post('/login', async (req, res) => {
-    const { email, passw } = req.body;
+    const email = req.body.email;
+    const passw = req.body.passw;
+
+    if (!validator.isEmail(email)) {
+        return res.status(400).json({ err: 'Invalid email format' });
+    }
+    if (typeof passw !== 'string' || passw.length < 6) {
+        return res.status(400).json({ err: 'Password must be at least 6 characters' });
+    }
 
     const user = await prisma.user.findFirst({
         where: { email }
@@ -45,8 +54,22 @@ router.post('/login', async (req, res) => {
 
 // SIGN-UP
 router.post('/sign-up', async (req, res) => {
-    const { email, passw, fname, lname, loc } = req.body;
+    const email = req.body.email;
+    const passw = req.body.passw;
+    const fname = sanitizer.sanitize(req.body.fname);
+    const lname = sanitizer.sanitize(req.body.lname);
+    const loc = sanitizer.sanitize(req.body.loc);
 
+    if (!validator.isEmail(email)) {
+        return res.status(400).json({ err: 'Invalid email format' });
+    }
+    if (typeof passw !== 'string' || passw.length < 6) {
+        return res.status(400).json({ err: 'Password must be at least 6 characters' });
+    }
+    if (!fname || !lname || !loc) {
+        return res.status(400).json({ err: 'All fields are required' });
+    }
+    
     let region = await prisma.region.findFirst({ where: { name: loc } });
     if (!region) {
         // Create region with name and get its ID
