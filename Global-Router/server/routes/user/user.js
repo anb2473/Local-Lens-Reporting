@@ -2,6 +2,7 @@ import express from 'express';
 import prisma from '../../prismaClient.js';
 import {fileURLToPath} from 'url';
 import path, {dirname} from 'path';
+import sanitizer from 'sanitizer';
 // import {fetch, CookieJar} from 'node-fetch-cookies'
 
 const router = express.Router();
@@ -64,11 +65,13 @@ router.get('/post', async (req, res) => {
 });
 
 router.post('/post', async (req, res) => {
-    const { title, content } = req.body;
+    // One-liner: destructure and sanitize title and content
+    let title = sanitizer.sanitize(req.body.title, 'string');
+    let content = sanitizer.sanitize(req.body.content, 'string');
 
     let jwt;
     try {
-        // --- Name scanner start ---
+        // Scan text for any user references
         const allUsers = await prisma.user.findMany({ select: { id: true, fname: true, lname: true, email: true } });
         const referencedUsers = allUsers.filter(user => {
             const fullName = `${user.fname} ${user.lname}`.toLowerCase();
@@ -516,22 +519,5 @@ router.post('/mk-chat', async (req, res) => {
         res.status(500).send('Error creating chat');
     }
 })
-
-router.post('/update-profile', async (req, res) => {
-    try {
-        const { fname, lname } = req.body;
-        if (!fname || !lname) {
-            return res.status(400).json({ error: 'First and last name are required' });
-        }
-        const updated = await prisma.user.update({
-            where: { id: req.userID },
-            data: { fname, lname }
-        });
-        res.json({ success: true });
-    } catch (err) {
-        console.error('Error updating profile:', err);
-        res.status(500).json({ error: 'Failed to update profile' });
-    }
-});
 
 export default router;

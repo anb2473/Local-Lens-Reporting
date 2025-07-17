@@ -21,6 +21,7 @@
     "jsonwebtoken": "^9.0.2",
     "node-fetch-cookies": "^2.1.1",
     "path": "^0.12.7",
-    "prisma": "^6.10.1"
+    "prisma": "^6.10.1",
+    "sanitizer": "^0.1.3"
   }
 }
