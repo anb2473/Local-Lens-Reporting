@@ -1,4 +1,8 @@
+// Defines our logger configuration to save logs as JSON
+
 import winston from 'winston';
+
+const logFile = winston.transports.File;
 
 const logger = winston.createLogger({
   level: 'info',
@@ -8,8 +12,19 @@ const logger = winston.createLogger({
   ),
   transports: [
     new winston.transports.Console(),
-    new winston.transports.File({ filename: 'error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'combined.log' })
+
+    // Automatically log errors to error.log
+    new logFile({ 
+      filename: 'error.log', 
+      level: 'error' 
+    }),
+
+    // Automatically log all info to info.log
+    // for user report logs
+    new logFile({ 
+      filename: 'info.log', 
+      level: 'info' 
+    })
   ]
 });
 

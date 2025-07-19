@@ -1,19 +1,26 @@
+// Handles user API endpoints and EJS frontend
+
 import express from 'express';
 import prisma from '../../prismaClient.js';
-import {fileURLToPath} from 'url';
-import path from 'path';
 import sanitizer from 'sanitizer';
 import logger from '../../logger.js';
 
 const router = express.Router();
 
-// Locate directory of resources
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.join(__filename, '..', '..', '..');
+// Define constants for configuration
+const dayStart = 'T00:00:00.000Z';
+const dayEnd = 'T23:59:59.999Z';
+
+// Set function aliases for readability
+const sanitizeInput = sanitizer.sanitize;
+const listRegions = prisma.region.findMany;
+const listUsers = prisma.user.findMany;
+const findRegion = prisma.region.findFirst;
+const findUser = prisma.user.findUnique;
 
 router.get('/search', async (req, res) => {
     try {
-        const query = sanitizer.sanitize(req.query.q) || '';
+        const query = sanitizeInput(req.query.q) || '';
         const selectedDate = req.query.date || new Date().toISOString().split('T')[0];
 
         const region = await prisma.region.findFirst({
@@ -22,15 +29,16 @@ router.get('/search', async (req, res) => {
                 news: {
                     where: {
                         createdAt: {
-                            gte: new Date(selectedDate + 'T00:00:00.000Z'),
-                            lt: new Date(selectedDate + 'T23:59:59.999Z')
+                            // Created between start and end of the day
+                            gte: new Date(selectedDate + dayStart),
+                            lt: new Date(selectedDate + dayEnd)
                         }
                     }
                 }
             }
         });
         
-        const regions = await prisma.region.findMany({
+        const regions = await listRegions({
             select: {
                 name: true
             }
@@ -45,7 +53,8 @@ router.get('/search', async (req, res) => {
         });
     } catch (error) {
         logger.error('Error fetching region:', error);
-        const regions = await prisma.region.findMany({
+        // Generate redundancy page
+        const regions = await listRegions({
             select: {
                 name: true,
             },
@@ -66,17 +75,28 @@ router.get('/post', async (req, res) => {
 
 router.post('/post', async (req, res) => {
     try {
-        let title = sanitizer.sanitize(req.body.title);
-        let content = sanitizer.sanitize(req.body.content);
+        const body = req.body;
+        const title = sanitizeInput(body.title);
+        const content = sanitizeInput(body.content);
     
         let jwt;
         // Scan text for any user references
-        const allUsers = await prisma.user.findMany({ select: { id: true, fname: true, lname: true, email: true } });
+        const allUsers = await listUsers({ 
+            select: { 
+                id: true, 
+                fname: true, 
+                lname: true, 
+                email: true 
+            } 
+        });
+        // Extract name for each user and check if exists in content
+        const lowercaseContent = content.toLowerCase()
         const referencedUsers = allUsers.filter(user => {
             const fullName = `${user.fname} ${user.lname}`.toLowerCase();
-            return content.toLowerCase().includes(fullName);
+            return lowercaseContent.includes(fullName);
         });
 
+        // Login to AI server to get JWT
         const jwt_res = await fetch('http://validity-ai-server-service:8000/auth/login', {
             method: 'POST',
             headers: {
@@ -110,7 +130,7 @@ router.post('/post', async (req, res) => {
             return res.status(500).send('Failed to get JWT from AI server');
         }
 
-        // Now verify title
+        // Verify title
         let titleRes = await fetch(`http://validity-ai-server-service:8000/api/ta?claim=${title.replaceAll(" ", "-")}` , {
             method: 'GET',
             headers: {
@@ -120,7 +140,7 @@ router.post('/post', async (req, res) => {
         });
         let titleVerification = await titleRes.json();
 
-        // Now verify content
+        // Verify content
         let contentRes = await fetch(`http://validity-ai-server-service:8000/api/ta?claim=${content.replaceAll(" ", "-")}` , {
             method: 'GET',
             headers: {
@@ -131,15 +151,23 @@ router.post('/post', async (req, res) => {
         let contentVerification = await contentRes.json();
 
         const regionName = req.query.r
-        const user = await prisma.user.findFirst({ where: { id: req.userID } });
 
         let region;
 
-        if (regionName === '') {
-            region = await prisma.region.findFirst({ where: { id: regionId } });
+        // If no region name provided use users region
+        if (regionName !== '') {
+            region = await findRegion({ 
+                where: { 
+                    id: regionId 
+                } 
+            });
         }
         else {
-            region = await prisma.region.findFirst({ where: { name: regionName } });
+            region = await findRegion({ 
+                where: { 
+                    id: req.userID 
+                } 
+            });
         }
 
         const averagePlausibility = (contentVerification.average_plausibility + titleVerification.average_plausibility) / 2;
@@ -148,6 +176,7 @@ router.post('/post', async (req, res) => {
             data: {
                 title: title,
                 content: content,
+                // Link post to user and region
                 region: { connect: { id: region.id } },
                 user: { connect: { id: req.userID } },
                 titleReliability: titleVerification,
@@ -156,17 +185,17 @@ router.post('/post', async (req, res) => {
                 referencedUsers: referencedUsers,
             },
         });
-        res.redirect(`/user/search?q=${regionName}`);
+        return res.redirect(`/user/search?q=${regionName}`);
     } catch (error) {
         logger.error('Error in /post:', error);
-        res.status(500).send('Error processing post');
+        return res.status(500).send('Error processing post');
     }
 });
 
 router.get('/news', async (req, res) => {
     const newsId = parseInt(req.query.news);
-    if (newsId.isNaN) {
-        res.status(400).send('Invalid post ID')
+    if (isNaN(newsId)) {
+        return res.status(400).send('Invalid post ID');
     }
     
     try {
@@ -223,7 +252,7 @@ router.get('/dashboard', async (req, res) => {
 
 router.post('/edit-post', async (req, res) => {
     const postId = parseInt(req.body.postId);
-    if (postId.isNaN) {
+    if (isNaN(postId)) {
         res.status(400).send('Invalid post ID')
     }
     const title = sanitizer.sanitize(req.body.title);
@@ -316,7 +345,7 @@ router.post('/edit-post', async (req, res) => {
 
 router.post('/delete-post', async (req, res) => {
     const postId = parseInt(req.body.postId);
-    if (postId.isNaN) {
+    if (isNaN(postId)) {
         res.status(400).send('Invalid post ID')
     }
     
@@ -418,7 +447,7 @@ router.get('/chat', async (req, res) => {
 router.post('/chat', async (req, res) => {
     try {
         const chatId = parseInt(req.body.chatId);
-        if (chatId.isNaN) {
+        if (isNaN(chatId)) {
             res.status(400).send('Invalid post ID')
         }
         const content = sanitizer.sanitize(req.body.content)

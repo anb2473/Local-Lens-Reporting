@@ -1,5 +1,8 @@
+// Outlines the schema for the Prisma ORM managing our PostgreSQL database
+
 generator client {
   provider      = "prisma-client-js"
+  // Docker uses Linux, so Prisma must be configured for Linux
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
