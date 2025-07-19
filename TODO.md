@@ -9,3 +9,5 @@ Dockerfile
 prismaClient.js
 server.js
 auth.js
+
+TODO: user.js, EJS Files
