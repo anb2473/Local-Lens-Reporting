@@ -17,6 +17,15 @@ const listRegions = prisma.region.findMany;
 const listUsers = prisma.user.findMany;
 const findRegion = prisma.region.findFirst;
 const findUser = prisma.user.findUnique;
+const findNews = prisma.news.findFirst;
+const findChat = prisma.chat.findFirst;
+const deleteNews = prisma.news.delete;
+const findUsers = prisma.user.findMany;
+const mkChat = prisma.chat.create;
+const mkMessage = prisma.message.create;
+const updateUser = prisma.user.update;
+const mkNews = prisma.news.create;
+const updateNews = prisma.news.update;
 
 router.get('/search', async (req, res) => {
     try {
@@ -172,7 +181,7 @@ router.post('/post', async (req, res) => {
 
         const averagePlausibility = (contentVerification.average_plausibility + titleVerification.average_plausibility) / 2;
 
-        const post = await prisma.news.create({
+        const post = await mkNews({
             data: {
                 title: title,
                 content: content,
@@ -199,7 +208,7 @@ router.get('/news', async (req, res) => {
     }
     
     try {
-        const news = await prisma.news.findUnique({
+        const news = await findNews({
             where: { id: parseInt(newsId) },
             include: {
                 user: {
@@ -225,7 +234,7 @@ router.get('/news', async (req, res) => {
 
 router.get('/dashboard', async (req, res) => {
     try {
-        const user = await prisma.user.findFirst({
+        const user = await findUser({
             where: { id: req.userID },
             include: {
                 news: {
@@ -243,24 +252,24 @@ router.get('/dashboard', async (req, res) => {
             return res.status(404).send('User not found');
         }
 
-        res.render('dash', { user });
+        return res.render('dash', { user });
     } catch (error) {
         logger.error('Error fetching user dashboard:', error);
-        res.status(500).send('Error fetching dashboard');
+        return res.status(500).send('Error fetching dashboard');
     }
 });
 
 router.post('/edit-post', async (req, res) => {
-    const postId = parseInt(req.body.postId);
-    if (isNaN(postId)) {
-        res.status(400).send('Invalid post ID')
-    }
-    const title = sanitizer.sanitize(req.body.title);
-    const content = sanitizer.sanitize(req.body.content);
-    
     try {
+        const postId = parseInt(req.body.postId);
+        if (isNaN(postId)) {
+            res.status(400).send('Invalid post ID')
+        }
+        const title = sanitizer.sanitize(req.body.title);
+        const content = sanitizer.sanitize(req.body.content);
+        
         // Verify the post belongs to the current user
-        const post = await prisma.news.findFirst({
+        const post = await findNews({
             where: {
                 id: postId,
                 userId: req.userID
@@ -325,7 +334,7 @@ router.post('/edit-post', async (req, res) => {
         const averagePlausibility = (contentVerification.average_plausibility + titleVerification.average_plausibility) / 2;
 
         // Update the post
-        await prisma.news.update({
+        await updateNews({
             where: { id: parseInt(postId) },
             data: {
                 title: title,
@@ -344,14 +353,14 @@ router.post('/edit-post', async (req, res) => {
 });
 
 router.post('/delete-post', async (req, res) => {
-    const postId = parseInt(req.body.postId);
-    if (isNaN(postId)) {
-        res.status(400).send('Invalid post ID')
-    }
-    
     try {
+        const postId = parseInt(req.body.postId);
+        if (isNaN(postId)) {
+            return res.status(400).send('Invalid post ID');
+        }
+    
         // Verify the post belongs to the current user
-        const post = await prisma.news.findFirst({
+        const post = await findNews({
             where: {
                 id: postId,
                 userId: req.userID
@@ -362,21 +371,22 @@ router.post('/delete-post', async (req, res) => {
             return res.status(404).send('Post not found or unauthorized');
         }
 
-        // Delete the post
-        await prisma.news.delete({
-            where: { id: parseInt(postId) }
+        await deleteNews({
+            where: { 
+                id: parseInt(postId) 
+            }
         });
 
-        res.status(200).send('Post deleted successfully');
+        return res.status(200).send('Post deleted successfully');
     } catch (error) {
         logger.error('Error deleting post:', error);
-        res.status(500).send('Error deleting post');
+        return res.status(500).send('Error deleting post');
     }
 });
 
 router.get('/chat-dash', async (req, res) => {
     try {
-        const user = await prisma.user.findFirst({
+        const user = await findUser({
             where: { id: req.userID },
             include: {
                 news: {
@@ -406,17 +416,17 @@ router.get('/chat-dash', async (req, res) => {
         }
 
         const chats = user.chats || [];
-        res.render('chat-dash', { chats: chats })
+        return res.render('chat-dash', { chats: chats })
     } catch (error) {
         logger.error('Error fetching chat dashboard:', error);
-        res.status(500).send('Error fetching chat dashboard');
+        return res.status(500).send('Error fetching chat dashboard');
     }
 })
 
 router.get('/chat', async (req, res) => {
     try {
         const chatId = parseInt(req.query.id);
-        const chat = await prisma.chat.findFirst({
+        const chat = await findChat({
             where: {
                 id: chatId,
             },
@@ -437,10 +447,10 @@ router.get('/chat', async (req, res) => {
             return res.status(404).send('Chat not found');
         }
 
-        res.render('chat', { chat: chat, userId: req.userID });
+        return res.render('chat', { chat: chat, userId: req.userID });
     } catch (error) {
         logger.error('Error fetching chat:', error);
-        res.status(500).send('Error fetching chat');
+        return res.status(500).send('Error fetching chat');
     }
 })
 
@@ -448,16 +458,16 @@ router.post('/chat', async (req, res) => {
     try {
         const chatId = parseInt(req.body.chatId);
         if (isNaN(chatId)) {
-            res.status(400).send('Invalid post ID')
+            res.status(400).send('Invalid post ID');
         }
-        const content = sanitizer.sanitize(req.body.content)
+        const content = sanitizeInput(req.body.content);
 
         if (!chatId || !content) {
             return res.status(400).send('Chat ID and content are required');
         }
 
         // Verify the chat exists and user is a participant
-        const chat = await prisma.chat.findFirst({
+        const chat = await findChat({
             where: {
                 id: parseInt(chatId),
                 participants: {
@@ -473,7 +483,7 @@ router.post('/chat', async (req, res) => {
         }
 
         // Create the message
-        const message = await prisma.message.create({
+        const message = await mkMessage({
             data: {
                 content: content,
                 chatId: parseInt(chatId),
@@ -482,39 +492,42 @@ router.post('/chat', async (req, res) => {
         });
 
         // Redirect back to the chat
-        res.redirect(`/user/chat?id=${chatId}`);
+        return res.redirect(`/user/chat?id=${chatId}`);
     } catch (error) {
         logger.error('Error posting chat:', error);
-        res.status(500).send('Error posting chat');
+        return res.status(500).send('Error posting chat');
     }
 })
 
 router.get('/mk-chat', async (req, res) => {
-    // Always get all users except the current user
-    const users = await prisma.user.findMany({
+    const users = await findUsers({
         where: {
             id: {
                 not: req.userID
             }
         }
     });
+
     // Support pre-selecting participants by ID via query param
     let preselectedUsers = [];
     if (req.query.participants) {
         const ids = req.query.participants.split(',').map(id => parseInt(id)).filter(id => !isNaN(id));
         if (ids.length > 0) {
-            preselectedUsers = await prisma.user.findMany({
+            preselectedUsers = await findUsers({
                 where: {
                     id: { in: ids }
                 }
             });
         }
     }
-    res.render('mk-chat', { users, preselectedUsers });
+
+    return res.render('mk-chat', { users, preselectedUsers });
 })
 
 router.post('/mk-chat', async (req, res) => {
-    const { chatName, participants } = req.body;
+    const body = req.body;
+    const chatName = sanitizeInput(body);
+    const participants = body.participants;
     
     try {
         // Validate input
@@ -523,8 +536,7 @@ router.post('/mk-chat', async (req, res) => {
         }
 
         // Get user IDs for participants (including current user)
-        const participantEmails = [...participants, req.userID];
-        const users = await prisma.user.findMany({
+        const users = await findUsers({
             where: {
                 email: {
                     in: participants
@@ -533,8 +545,10 @@ router.post('/mk-chat', async (req, res) => {
         });
 
         // Add current user to participants
-        const currentUser = await prisma.user.findUnique({
-            where: { id: req.userID }
+        const currentUser = await findUser({
+            where: {
+                id: req.userID 
+            }
         });
 
         if (!currentUser) {
@@ -544,7 +558,7 @@ router.post('/mk-chat', async (req, res) => {
         const allParticipants = [...users, currentUser];
 
         // Create the chat
-        const chat = await prisma.chat.create({
+        const chat = await mkChat({
             data: {
                 name: chatName,
                 participants: {
@@ -554,10 +568,10 @@ router.post('/mk-chat', async (req, res) => {
         });
 
         // Redirect to the chat dashboard
-        res.redirect('/user/chat-dash');
+        return res.redirect('/user/chat-dash');
     } catch (error) {
         logger.error('Error creating chat:', error);
-        res.status(500).send('Error creating chat');
+        return res.status(500).send('Error creating chat');
     }
 })
 
@@ -567,7 +581,7 @@ router.post('/update-profile', async (req, res) => {
         if (!fname || !lname) {
             return res.status(400).json({ error: 'First and last name are required' });
         }
-        const updated = await prisma.user.update({
+        const updated = await updateUser({
             where: { id: req.userID },
             data: { fname, lname }
         });

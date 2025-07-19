@@ -25,6 +25,14 @@ const updateIPLog = prisma.ipLog.update;
 const findIPLog = prisma.ipLog.findFirst;
 const findOrCreateRegion = prisma.region.upsert;
 
+async function findUserByEmail (email) {
+    return await findUser({
+            where: {
+                email: email 
+            }
+    });
+}
+
 router.post('/login', async (req, res) => {
     try {
         const body = req.body;
@@ -38,11 +46,7 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ err: 'Invalid password' });
         }
 
-        const user = await findUser({
-            where: {
-                email: email 
-            }
-        });
+        const user = await findUserByEmail(email)
 
         if (!user) {
             return res.status(404).json({ err: 'Incorrect password or email' });

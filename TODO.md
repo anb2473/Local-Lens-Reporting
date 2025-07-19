@@ -9,5 +9,9 @@ Dockerfile
 prismaClient.js
 server.js
 auth.js
+user.js
 
-TODO: user.js, EJS Files
+ENSURE NO SEND IN USER AND PROPER ERROR HANDLING
+BREAK DOWN FUNCTIONS
+
+TODO: EJS Files
