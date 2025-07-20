@@ -1483,6 +1483,32 @@ input[type="date"] {
     word-wrap: break-word;
 }
 
+.gray-message {
+    position: relative;
+}
+
+.gray-message .message-owner {
+    position: absolute;
+    left: 125%;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    z-index: 10;
+    transform: translateX(-10px);
+}
+
+.gray-message:hover .message-owner {
+    opacity: 1;
+    transform: translateX(5px);
+}
+
 .gray-message:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -1687,4 +1713,17 @@ input[type="date"] {
 .settings-error-message[style*="display: none"] {
     opacity: 0 !important;
     pointer-events: none !important;
+}
+
+.chat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }

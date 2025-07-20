@@ -45,6 +45,7 @@
                     <% } else { %>
                         <div class="gray-message">
                             <%= message.content %>
+                            <span class="message-owner"><%= message.owner.fname %></span>
                         </div>
                     <% } %>
                 <% }); %>

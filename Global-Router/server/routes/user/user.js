@@ -165,10 +165,10 @@ router.post('/post', async (req, res) => {
 
         // If no region name provided use users region
         if (regionName !== '') {
-            region = await findRegion({ 
-                where: { 
-                    id: regionId 
-                } 
+            region = await findRegion({
+                where: {
+                    name: regionName
+                }
             });
         }
         else {
@@ -433,7 +433,7 @@ router.get('/chat', async (req, res) => {
             include: {
                 messages: {
                     include: {
-                        owner: true
+                        owner: true,
                     },
                     orderBy: {
                         createdAt: 'asc'
@@ -526,7 +526,7 @@ router.get('/mk-chat', async (req, res) => {
 
 router.post('/mk-chat', async (req, res) => {
     const body = req.body;
-    const chatName = sanitizeInput(body);
+    const chatName = sanitizeInput(body.chatName);
     const participants = body.participants;
     
     try {
