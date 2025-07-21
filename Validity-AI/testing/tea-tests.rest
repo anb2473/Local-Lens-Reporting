@@ -1,0 +1,3 @@
+    ### Test text equivilence analyzer endpoint with valid JWT cookie and valid query
+    GET http://127.0.0.1:8000/api/tea?claim-1=There-are-donkeys-on-mars&claim-2=Donkes-exist-on-mars
+    Cookie: access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0YmIxNTY4OWZlYzAzMjNjYjk0MzcxYmU5NDNjMjk4YiIsImV4cCI6MTc1MTQwMzU1Mn0.PSze98uVlky2k7ceQI6vCJXCf-Bn0iUdfy-yyoAy39A

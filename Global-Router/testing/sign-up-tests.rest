@@ -1,0 +1,73 @@
+### Test sign up API ONLY request
+POST https://127.0.0.1:3000/auth/sign-up
+Cookie: jwt=unknown
+Content-Type: application/json
+
+{
+    "email": "test.user@gmail.com",
+    "passw": "123456",
+    "fname": "Test",
+    "lname": "User",
+    "loc": "Test Region"
+}
+
+### Test sign up API ONLY request with invalid cookie
+POST https://127.0.0.1:3000/auth/sign-up
+Cookie: jwt=invalidCookie
+Content-Type: application/json
+
+{
+    "email": "test.user@gmail.com",
+    "passw": "123456",
+    "fname": "Test",
+    "lname": "User",
+    "loc": "Test Region"
+}
+
+### Test sign up API ONLY request without cookie
+POST https://127.0.0.1:3000/auth/sign-up
+Content-Type: application/json
+
+{
+    "email": "test.user@gmail.com",
+    "passw": "123456",
+    "fname": "Test",
+    "lname": "User",
+    "loc": "Test Region"
+}
+
+### Test sign up API ONLY request with invalid email
+POST https://127.0.0.1:3000/auth/sign-up
+Cookie: jwt=unknown
+Content-Type: application/json
+
+{
+    "email": "test.user",
+    "passw": "123456",
+    "fname": "Test",
+    "lname": "User",
+    "loc": "Test Region"
+}
+
+### Test sign up API ONLY request without all inputs
+POST https://127.0.0.1:3000/auth/sign-up
+Cookie: jwt=unknown
+Content-Type: application/json
+
+{
+}
+
+### Test sign up API ONLY request with invalid data types
+POST https://127.0.0.1:3000/auth/sign-up
+Cookie: jwt=unknown
+Content-Type: application/json
+
+{
+    "email": ["test", ".", "user", "@", "gmail", ".", "com"],
+    "passw": 123456,
+    "fname": ["Test"],
+    "lname": ["user"],
+    "loc": {
+        "Test": "Region"
+    }
+}

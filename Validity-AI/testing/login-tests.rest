@@ -1,0 +1,40 @@
+### Test login API ONLY request without  passw
+POST http://127.0.0.1:8000/auth/login
+Content-Type: application/json
+
+{
+
+}
+
+### Test login API ONLY request with valid passw
+POST http://127.0.0.1:8000/auth/login
+Content-Type: application/json
+
+{
+  "passw": "passw0rd"
+}
+
+
+### Test login API ONLY request with different datatypes
+POST http://127.0.0.1:8000/auth/login
+Content-Type: application/json
+
+{
+  "passw": ["passw", "0", "rd"]
+}
+
+### Test login API ONLY request with invalid passw
+POST http://127.0.0.1:8000/auth/login
+Content-Type: application/json
+
+{
+  "passw": "notPassw0rd"
+}
+
+### Test login API ONLY request with invalid passw
+POST http://127.0.0.1:8000/auth/login
+Content-Type: application/json
+
+{
+  "passw": "notPassw0rd"
+}

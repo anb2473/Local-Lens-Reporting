@@ -1,0 +1,17 @@
+### Test index page
+GET http://127.0.0.1:3000/
+
+### Test about page
+GET http://127.0.0.1:3000/about
+
+### Test our solution page
+GET http://127.0.0.1:3000/our-solution
+
+### Test login page
+GET http://127.0.0.1:3000/login
+
+### Test sign up page
+GET http://127.0.0.1:3000/sign-up
+
+### Test logout API ONLY request
+GET http://127.0.0.1:3000/logout

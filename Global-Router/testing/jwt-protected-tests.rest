@@ -1,0 +1,201 @@
+### Test user route without JWT cookie
+GET http:/127.0.0.1:3000/user
+
+### Test search page without any inputs
+GET http:/127.0.0.1:3000/user/search
+Cookie: jwt=unknown
+
+### Test search page with query
+GET http://127.0.0.1:3000/user/search?q=Washington+DC&date=2025-07-20
+Cookie: jwt=unknown
+
+### Test post page
+GET http://127.0.0.1:3000/user/post
+Cookie: jwt=unknown
+
+### Test post API ONLY endpoint
+POST http://127.0.0.1:3000/user/post
+Cookie: jwt=unknown
+Content-Type: application/json
+
+{
+    "title": "Test Post",
+    "content": "This is a test post"
+}
+
+### Test post API ONLY endpoint without all inputs
+POST http://127.0.0.1:3000/user/post
+Cookie: jwt=unknown
+Content-Type: application/json
+
+{
+
+}
+
+### Test post API ONLY endpoint with different datatypes
+POST http://127.0.0.1:3000/user/post
+Cookie: jwt=unknown
+Content-Type: application/json
+
+{
+    "title": ["Test", "Post"],
+    "content": {
+        "This": "is a",
+        "test": "post"
+    }
+}
+
+### Test news page
+GET http://127.0.0.1:3000/user/news?news=1
+Cookie: jwt=unknown
+
+### Test news page without news ID
+GET http://127.0.0.1:3000/user/news
+Cookie: jwt=unknown
+
+### Test news page with invalid id
+GET http://127.0.0.1:3000/user/news?news=-1
+Cookie: jwt=unknown
+
+### Test news page with different datatypes
+GET http://127.0.0.1:3000/user/news?news=id
+Cookie: jwt=unknown
+
+### Test dashboard page
+GET http://127.0.0.1:3000/user/dash
+Cookie: jwt=unknown
+
+### Test edit post API ONLY endpoint
+POST http://127.0.0.1:3000/user/edit-post
+Cookie: jwt=unknown
+Content-Type: application/json
+
+{
+    "title": "Test Edited Post",
+    "content": "This is a edited post"
+}
+
+### Test edit post API ONLY endpoint without all inputs
+POST http://127.0.0.1:3000/user/edit-post
+Cookie: jwt=unknown
+Content-Type: application/json
+
+{
+
+}
+
+### Test edit post API ONLY endpoint with different datatypes
+POST http://127.0.0.1:3000/user/edit-post'
+Cookie: jwt=unknown
+Content-Type: application/json
+
+{
+    "title": ["Test", "Edited", "Post"],
+    "content": {
+        "This": "is",
+        "a": "test",
+        "edited": "post"
+    }
+}
+
+### Test chat dash page
+GET http://127.0.0.1:3000/user/chat-dash
+Cookie: jwt=unknown
+
+### Test chat page
+GET http://127.0.0.1:3000/user/chat?id=1
+Cookie: jwt=unknown
+
+### Test chat page without id
+GET http://127.0.0.1:3000/user/chat
+Cookie: jwt=unknown
+
+### Test chat page with invalid id
+GET http://127.0.0.1:3000/user/chat?id=-1
+Cookie: jwt=unknown
+
+### Test chat page with invalid id with different datatypes
+GET http://127.0.0.1:3000/user/chat?id=id
+Cookie: jwt=unknown
+
+### Test chat API ONLY endpoint
+POST http://127.0.0.1:3000/user/chat
+Cookie: jwt=unknown
+Content-Type: application/json
+
+{
+    "chatId": 1,
+    "content": "This is a test message"
+}
+
+### Test chat API ONLY endpoint with invalid id
+POST http://127.0.0.1:3000/user/chat
+Cookie: jwt=unknown
+Content-Type: application/json
+
+{
+    "chatId": -1,
+    "content": "This is a test message"
+}
+
+### Test chat API ONLY endpoint with different datatypes
+POST http://127.0.0.1:3000/user/chat
+Cookie: jwt=unknown
+Content-Type: application/json
+
+{
+    "chatId": "1",
+    "content": ["This", "is", "a", "test", "message"]
+}
+
+### Test chat API ONLY endpoint without all inputs
+POST http://127.0.0.1:3000/user/chat
+Cookie: jwt=unknown
+Content-Type: application/json
+
+{
+
+}
+
+### Test mk chat page
+GET http://127.0.0.1:3000/user/mk-chat
+Cookie: jwt=unknown
+
+### Test mk chat API ONLY endpoint
+POST http://127.0.0.1:3000/user/mk-chat
+Cookie: jwt=unknown
+Content-Type: application/json
+
+{
+    "chatName": "Test Chat",
+    "participants": ["test.user@gmail.com"]
+}
+
+### Test mk chat API ONLY endpoint without all inputs
+POST http://127.0.0.1:3000/user/mk-chat
+Cookie: jwt=unknown
+Content-Type: application/json
+
+{
+
+}
+
+### Test mk chat API ONLY endpoint with different datatypes
+POST http://127.0.0.1:3000/user/mk-chat
+Cookie: jwt=unknown
+Content-Type: application/json
+
+{
+    "chatName": ["Test", "Chat"],
+    "participants": "test.user@gmail.com"
+}
+
+### Test update profile API ONLY endpoint
+POST http://127.0.0.1:3000/user/update-profile
+Cookie: jwt=unknown
+Content-Type: application/json
+
+{
+    "fname": "Test",
+    "lname": "User Updated"
+}

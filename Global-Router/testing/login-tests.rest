@@ -1,0 +1,36 @@
+### Test login API ONLY request
+POST http://127.0.0.1:3000/auth/login
+Content-Type: application/json
+
+{
+    "email": "test.user@gmail.com",
+    "passw": "123456"
+}
+
+### Test login API ONLY request with invalid email
+POST http://127.0.0.1:3000/auth/login
+Content-Type: application/json
+
+{
+    "email": "test.user",
+    "passw": "123456"
+}
+
+### Test login API ONLY request without all inputs
+POST http://127.0.0.1:3000/auth/login
+Content-Type: application/json
+
+{
+
+}
+
+### Test login API ONLY request with invalid datatypes
+POST http://127.0.0.1:3000/auth/login
+Content-Type: application/json
+
+{
+    "email": ["test", ".", "user", "@", "gmail", ".", "com"],
+    "passw": {
+        "1": 2
+    }
+}
