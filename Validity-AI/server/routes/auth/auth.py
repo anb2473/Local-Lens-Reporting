@@ -38,6 +38,12 @@ async def login(req: Request, res: Response):
             detail="Password is required"
         )
     req_passw = data["passw"]
+    print(type(req_passw))
+    if type(req_passw) is not str:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Password must be a string"
+        )    
     hashed_passw = hashlib.pbkdf2_hmac('sha256', req_passw.encode('utf-8'), salt_bytes, 100000)
     if hashed_passw != passw_bytes:
         raise HTTPException(

@@ -30,11 +30,3 @@ Content-Type: application/json
 {
   "passw": "notPassw0rd"
 }
-
-### Test login API ONLY request with invalid passw
-POST http://127.0.0.1:8000/auth/login
-Content-Type: application/json
-
-{
-  "passw": "notPassw0rd"
-}

@@ -11,6 +11,11 @@ secret_key = os.getenv("SECRET_KEY")
 
 async def auth_middleware(req: Request):
     # Example: Check for a JWT in cookies
+    if not req.cookies:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Missing cookies"
+        )
     token = req.cookies.get("access_token")
     if not token:
         raise HTTPException(
