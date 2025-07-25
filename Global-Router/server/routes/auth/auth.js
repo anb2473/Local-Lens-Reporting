@@ -42,7 +42,7 @@ router.post('/login', async (req, res) => {
         if (!isValid(email)) {
             return res.status(400).json({ err: 'Invalid email format' });
         }
-        if (typeof passw !== 'string') {     // Input validation
+        if (typeof passw !== 'string' || passw.length < minPasswLen) {     // Input validation
             return res.status(400).json({ err: 'Invalid password' });
         }
 
