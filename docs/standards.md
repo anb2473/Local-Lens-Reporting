@@ -9,7 +9,8 @@
 2. Maximize simplicity. Ten lines is better than a hundred.
     * Break down long functions into reusable parts, which will increase readability and reduce complexity.
     * Store as few attributes as possible in a prisma model.
-3. Maximize security to a reasonable degree.
+3. Avoid seperating functions for endpoints. Seperating endpoints removes the structure of the file and makes efficient refractoring more difficult.
+4. Maximize security to a reasonable degree.
     * Use secure practices whenever possible such as sanitizing potentially dangerous content.
     * Avoid storing high risk data directly in the database.
     * Add guard clauses whenever possible to protect agains missuse.
@@ -19,7 +20,7 @@
     * Do not directly store any `.env` variables in the Docker container at build, pass them in at runtime.
     * Do not use EJS outside the user routes. EJS increases load on the server allowing for a potential DDOS attack, which is far harder if the rendering is protected in the user routes.
     * Do not focus on security outside the scope of the project. Unnecisary security measures distracts from the content of the project.
-4. Don't follow 'clean code' principles. The only principles that matter are security, clarity, simplicity, and whether it works.
+5. Don't follow 'clean code' principles. The only principles that matter are security, clarity, simplicity, and whether it works.
 
 ## Testing
 
