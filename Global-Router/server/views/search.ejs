@@ -77,6 +77,22 @@
 
         <% if (region && region.news) { %>
             <% if (region.news.length > 0) { %>
+                <div style="text-align: center; margin: 2rem 0;">
+                    <div class="download-dropdown">
+                        <button class="download-btn dropdown-toggle" id="downloadToggleBtn">
+                            📥 Download Region Data
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div class="download-dropdown-menu" id="downloadDropdown">
+                            <a href="/user/download?region=<%= encodeURIComponent(query) %>&date=<%= encodeURIComponent(selectedDate || new Date().toISOString().split('T')[0]) %>&format=markdown" class="download-option">
+                                📝 Markdown
+                            </a>
+                            <a href="/user/download?region=<%= encodeURIComponent(query) %>&date=<%= encodeURIComponent(selectedDate || new Date().toISOString().split('T')[0]) %>&format=json" class="download-option">
+                                📊 JSON
+                            </a>
+                        </div>
+                    </div>
+                </div>
                 <div class="news-list">
                     <% region.news.sort((a, b) => b.averagePlausability - a.averagePlausability).forEach(news => { %>
                         <a href="news?news=<%= news.id%>" style="text-decoration: none;">
@@ -213,6 +229,27 @@
 
             // Initial setup
             initializeTextTruncation();
+
+            // Download dropdown functionality
+            function toggleDownloadDropdown() {
+                const dropdown = document.getElementById('downloadDropdown');
+                dropdown.classList.toggle('show');
+            }
+
+            // Add event listener to download toggle button
+            const downloadToggleBtn = document.getElementById('downloadToggleBtn');
+            if (downloadToggleBtn) {
+                downloadToggleBtn.addEventListener('click', toggleDownloadDropdown);
+            }
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                const dropdown = document.getElementById('downloadDropdown');
+                const downloadBtn = document.querySelector('.download-dropdown');
+                if (!downloadBtn.contains(e.target)) {
+                    dropdown.classList.remove('show');
+                }
+            });
 
             document.body.classList.add('loaded');
         });

@@ -587,8 +587,118 @@ router.post('/update-profile', async (req, res) => {
         });
         res.json({ success: true });
     } catch (err) {
-        console.error('Error updating profile:', err);
+        logger.error('Error updating profile:', err);
         res.status(500).json({ error: 'Failed to update profile' });
+    }
+});
+
+router.get('/download', async (req, res) => {
+    try {
+        const { region, date, format } = req.query;
+        
+        // Validate required parameters
+        if (!region || !date || !format) {
+            return res.status(400).json({ error: 'Region, date, and format are required' });
+        }
+        
+        // Validate format
+        if (!['markdown', 'json'].includes(format)) {
+            return res.status(400).json({ error: 'Format must be either "markdown" or "json"' });
+        }
+        
+        // Find the region
+        const foundRegion = await findRegion({
+            where: { name: region }
+        });
+        
+        if (!foundRegion) {
+            return res.status(404).json({ error: 'Region not found' });
+        }
+        
+        // Get news stories for the region and date, ordered by plausibility
+        const newsStories = await prisma.news.findMany({
+            where: {
+                regionId: foundRegion.id,
+                createdAt: {
+                    gte: new Date(date + 'T00:00:00.000Z'),
+                    lt: new Date(new Date(date).getTime() + 24 * 60 * 60 * 1000) // Next day
+                }
+            },
+            orderBy: {
+                averagePlausability: 'desc'
+            },
+            include: {
+                user: {
+                    select: {
+                        fname: true,
+                        lname: true
+                    }
+                }
+            }
+        });
+        
+        if (newsStories.length === 0) {
+            return res.status(404).json({ error: 'No news stories found for this region and date' });
+        }
+        
+        let content, filename, contentType;
+        
+        if (format === 'markdown') {
+            // Generate Markdown content
+            content = `# News Stories for ${region} - ${date}\n\n`;
+            content += `Generated on ${new Date().toLocaleDateString()}\n\n`;
+            
+            newsStories.forEach((story, index) => {
+                content += `## ${index + 1}. ${story.title}\n\n`;
+                content += `**Plausibility Score:** ${story.averagePlausability}\n\n`;
+                content += `**Content:** ${story.content}\n\n`;
+                if (story.user) {
+                    content += `**Author:** ${story.user.fname} ${story.user.lname}\n\n`;
+                }
+                content += `**Date:** ${new Date(story.createdAt).toLocaleDateString()}\n\n`;
+                content += `---\n\n`;
+            });
+            
+            filename = `${region}_${date}_news.md`;
+            contentType = 'text/markdown';
+        } else {
+            // Generate JSON content
+            const jsonData = {
+                region: region,
+                date: date,
+                generatedAt: new Date().toISOString(),
+                totalStories: newsStories.length,
+                stories: newsStories.map(story => ({
+                    id: story.id,
+                    title: story.title,
+                    content: story.content,
+                    averagePlausability: story.averagePlausability,
+                    createdAt: story.createdAt,
+                    author: story.user ? {
+                        fname: story.user.fname,
+                        lname: story.user.lname
+                    } : null
+                }))
+            };
+            
+            content = JSON.stringify(jsonData, null, 2);
+            filename = `${region}_${date}_news.json`;
+            contentType = 'application/json';
+        }
+        
+        // Set headers for file download
+        res.setHeader('Content-Type', contentType);
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+        res.setHeader('Content-Length', Buffer.byteLength(content, 'utf8'));
+        
+        // Send the file content
+        res.send(content);
+        
+        logger.info(`Download generated for region: ${region}, date: ${date}, format: ${format}`);
+        
+    } catch (error) {
+        logger.error('Error generating download:', error);
+        res.status(500).json({ error: 'Failed to generate download' });
     }
 });
 

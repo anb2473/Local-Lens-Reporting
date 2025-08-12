@@ -24,3 +24,13 @@
 {"level":"info","message":"Server active at http://127.0.0.1:3000","timestamp":"2025-07-22T00:17:12.280Z"}
 {"level":"info","message":"Server active at http://127.0.0.1:3000","timestamp":"2025-07-22T00:20:19.635Z"}
 {"level":"info","message":"Server active at http://127.0.0.1:3000","timestamp":"2025-07-22T00:20:57.604Z"}
+{"level":"info","message":"Server active at http://127.0.0.1:3000","timestamp":"2025-08-12T22:31:58.346Z"}
+{"level":"info","message":"Server active at http://127.0.0.1:3000","timestamp":"2025-08-12T22:37:11.584Z"}
+{"level":"info","message":"Server active at http://127.0.0.1:3000","timestamp":"2025-08-12T22:45:11.073Z"}
+{"level":"info","message":"Server active at http://127.0.0.1:3000","timestamp":"2025-08-12T22:49:51.055Z"}
+{"level":"info","message":"Server active at http://127.0.0.1:3000","timestamp":"2025-08-12T22:59:23.830Z"}
+{"level":"error","message":"Error generating download: findManyNews is not defined","stack":"ReferenceError: findManyNews is not defined\n    at file:///app/routes/user/user.js:619:29","timestamp":"2025-08-12T22:59:36.081Z"}
+{"level":"info","message":"Server active at http://127.0.0.1:3000","timestamp":"2025-08-12T23:02:35.223Z"}
+{"level":"info","message":"Download generated for region: Washington DC, date: 2025-08-12, format: json","timestamp":"2025-08-12T23:02:41.535Z"}
+{"level":"info","message":"Download generated for region: Washington DC, date: 2025-08-12, format: markdown","timestamp":"2025-08-12T23:03:33.363Z"}
+{"level":"info","message":"Download generated for region: Washington DC, date: 2025-08-12, format: json","timestamp":"2025-08-12T23:04:04.329Z"}
