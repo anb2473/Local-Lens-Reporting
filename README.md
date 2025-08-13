@@ -15,6 +15,10 @@ In order to run the system via Docker compose:
 
 **NOTE:** It will take a couple minutes for docker to build the system, and after running you may need to wait a couple minutes for the AI service to load. (These delays will only happen the first time you run the service)
 
+**ALSO:** You may encounter an error message saying that an error has occurec on the log in or sign up pages. This is normal, and is just the IP limiting to protect against a DOS or DDOS attack.
+
+**LASTLY:** When you post it may take a couple seconds before redirecting back to the search page. (Same for when editing a post) Unfortunately, due to the computational intensity of the AI models we are using to calculate the plausibility of the post, unless you have an incredibly powerful PC there will be a delay.
+
 If you encounter any errors, please refer to the possible errors section.
 
 ## Possible Errors
