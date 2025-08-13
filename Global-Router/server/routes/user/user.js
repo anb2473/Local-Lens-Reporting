@@ -333,6 +333,23 @@ router.post('/edit-post', async (req, res) => {
 
         const averagePlausibility = (contentVerification.average_plausibility + titleVerification.average_plausibility) / 2;
 
+        // Scan text for any user references in the updated content
+        const allUsers = await listUsers({ 
+            select: { 
+                id: true, 
+                fname: true, 
+                lname: true, 
+                email: true 
+            } 
+        });
+        
+        // Extract name for each user and check if exists in updated content
+        const lowercaseContent = content.toLowerCase();
+        const referencedUsers = allUsers.filter(user => {
+            const fullName = `${user.fname} ${user.lname}`.toLowerCase();
+            return lowercaseContent.includes(fullName);
+        });
+
         // Update the post
         await updateNews({
             where: { id: parseInt(postId) },
@@ -342,6 +359,7 @@ router.post('/edit-post', async (req, res) => {
                 titleReliability: titleVerification,
                 contentReliability: contentVerification,
                 averagePlausability: Math.floor(averagePlausibility * 100),
+                referencedUsers: referencedUsers,
             }
         });
 
